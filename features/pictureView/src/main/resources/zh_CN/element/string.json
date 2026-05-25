@@ -1,0 +1,24 @@
+{
+  "string": [
+    {
+      "name": "ActionInterface1",
+      "value": "分享"
+    },
+    {
+      "name": "ActionInterface2",
+      "value": "收藏"
+    },
+    {
+      "name": "ActionInterface3",
+      "value": "编辑"
+    },
+    {
+      "name": "ActionInterface4",
+      "value": "删除"
+    },
+    {
+      "name": "ActionInterface5",
+      "value": "更多"
+    }
+  ]
+}

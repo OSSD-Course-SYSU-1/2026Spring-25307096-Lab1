@@ -1,0 +1,63 @@
+{
+  "string": [
+    {
+      "name": "picture",
+      "value": "图片"
+    },
+    {
+      "name": "sideConstants1",
+      "value": "      照片、人物、地点..."
+    },
+    {
+      "name": "sideConstants2",
+      "value": "相册"
+    },
+    {
+      "name": "sideConstants3",
+      "value": "图片"
+    },
+    {
+      "name": "sideConstants4",
+      "value": "我的收藏"
+    },
+    {
+      "name": "sideConstants5",
+      "value": "12"
+    },
+    {
+      "name": "sideConstants6",
+      "value": "视频"
+    },
+    {
+      "name": "sideConstants7",
+      "value": "新建相册1"
+    },
+    {
+      "name": "sideConstants8",
+      "value": "新建相册2"
+    },
+    {
+      "name": "sideConstants9",
+      "value": "人像"
+    },
+    {
+      "name": "sideConstants10",
+      "value": "地点"
+    },    {
+      "name": "sideConstants11",
+      "value": "上海市"
+    },
+    {
+      "name": "sideConstants12",
+      "value": "北京市"
+    },
+    {
+      "name": "sideConstants13",
+      "value": "南京市"
+    },
+    {
+      "name": "sideConstants14",
+      "value": "分类"
+    }
+  ]
+}

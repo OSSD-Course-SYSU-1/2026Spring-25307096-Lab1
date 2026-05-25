@@ -1,0 +1,60 @@
+{
+  "string": [
+    {
+      "name": "edit",
+      "value": "编辑"
+    },
+    {
+      "name": "ToolsAndName1",
+      "value": "截取"
+    },
+    {
+      "name": "ToolsAndName2",
+      "value": "裁剪"
+    },
+    {
+      "name": "ToolsAndName3",
+      "value": "调节"
+    },
+    {
+      "name": "ToolsAndName4",
+      "value": "滤镜"
+    },
+    {
+      "name": "PicAndName1",
+      "value": "原片"
+    },
+    {
+      "name": "PicAndName2",
+      "value": "经典"
+    },
+    {
+      "name": "PicAndName3",
+      "value": "晨光"
+    },
+    {
+      "name": "PicAndName4",
+      "value": "黄昏"
+    },
+    {
+      "name": "PicAndName5",
+      "value": "光晕"
+    },
+    {
+      "name": "PicAndName6",
+      "value": "童年"
+    },
+    {
+      "name": "PicAndName7",
+      "value": "怀旧"
+    },
+    {
+      "name": "PicAndName8",
+      "value": "老照片"
+    },
+    {
+      "name": "subtitle_infomation",
+      "value": "下午04:00 呼和浩特市"
+    }
+  ]
+}

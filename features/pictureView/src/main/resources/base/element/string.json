@@ -1,0 +1,24 @@
+{
+  "string": [
+    {
+      "name": "ActionInterface1",
+      "value": "share"
+    },
+    {
+      "name": "ActionInterface2",
+      "value": "save"
+    },
+    {
+      "name": "ActionInterface3",
+      "value": "edit"
+    },
+    {
+      "name": "ActionInterface4",
+      "value": "delete"
+    },
+    {
+      "name": "ActionInterface5",
+      "value": "more"
+    }
+  ]
+}

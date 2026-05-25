@@ -1,0 +1,14 @@
+{
+  "license": "",
+  "devDependencies": {},
+  "author": "",
+  "name": "phone",
+  "description": "Please describe the basic information.",
+  "main": "",
+  "version": "1.0.0",
+  "dependencies": {
+    "base": "file:../../commons/base",
+    "pictureedit": "file:../../features/pictureEdit",
+    "pictureview": "file:../../features/pictureView"
+  }
+}
