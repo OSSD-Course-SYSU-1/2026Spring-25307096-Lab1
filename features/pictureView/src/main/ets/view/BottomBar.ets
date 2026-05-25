@@ -29,15 +29,13 @@ export struct BottomBar {
       justifyContent: FlexAlign.Center,
       direction: FlexDirection.Row
     }) {
-      ForEach(PictureViewConstants.ACTIONS, (item: ActionInterface) => {
+      ForEach(PictureViewConstants.ACTIONS, (item: ActionInterface, index: number) => {
         Column() {
           Image(item.icon)
             .height(BaseConstants.DEFAULT_ICON_SIZE)
             .width(BaseConstants.DEFAULT_ICON_SIZE)
-            .fillColor(this.isFavorited && item.icon === $r('app.media.ic_public_favor') ?
-              '#FF4444' : '')
-          Text(this.isFavorited && item.icon === $r('app.media.ic_public_favor') ?
-            $r('app.string.favorited') : item.icon_name)
+            .fillColor(this.isFavorited && index === 1 ? '#FF4444' : '')
+          Text(this.isFavorited && index === 1 ? $r('app.string.favorited') : item.icon_name)
             .fontFamily(BaseConstants.FONT_FAMILY_NORMAL)
             .fontSize(BaseConstants.FONT_SIZE_TEN)
             .fontWeight(BaseConstants.FONT_WEIGHT_FOUR)
@@ -50,7 +48,7 @@ export struct BottomBar {
             if (pushPath === '编辑' || pushPath === 'edit') {
               this.pageInfos.pushPath(new NavPathInfo('pictureEdit', []));
             }
-            if (item.icon === $r('app.media.ic_public_favor')) {
+            if (index === 1) {
               this.isFavorited = !this.isFavorited;
             }
           } catch (error) {
@@ -59,7 +57,7 @@ export struct BottomBar {
           }
         })
         .width(PictureViewConstants.ICON_LIST_WIDTH)
-      }, (item: ActionInterface, index: number) => index + JSON.stringify(item))
+      }, (item: ActionInterface, idx: number) => idx + JSON.stringify(item))
     }
     .height($r('app.float.icon_list_height'))
   }

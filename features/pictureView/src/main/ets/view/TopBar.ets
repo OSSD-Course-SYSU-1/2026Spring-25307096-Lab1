@@ -75,12 +75,11 @@ export struct TopBar {
                   this.showInfoDialog = true;
                 })
               if (this.currentBp === BreakpointConstants.BREAKPOINT_LG) {
-                ForEach(PictureViewConstants.ACTIONS, (item: ActionInterface) => {
+                ForEach(PictureViewConstants.ACTIONS, (item: ActionInterface, index: number) => {
                   Image(item.icon)
                     .height(BaseConstants.DEFAULT_ICON_SIZE)
                     .width(BaseConstants.DEFAULT_ICON_SIZE)
-                    .fillColor(this.isFavorited && item.icon === $r('app.media.ic_public_favor') ?
-                      '#FF4444' : '')
+                    .fillColor(this.isFavorited && index === 1 ? '#FF4444' : '')
                     .margin({ left: $r('app.float.detail_image_left') })
                     .onClick(() => {
                       try {
@@ -89,7 +88,7 @@ export struct TopBar {
                         if (pushPath === '编辑' || pushPath === 'edit') {
                           this.pageInfos.pushPath(new NavPathInfo('pictureEdit', []));
                         }
-                        if (item.icon === $r('app.media.ic_public_favor')) {
+                        if (index === 1) {
                           this.isFavorited = !this.isFavorited;
                         }
                       } catch (error) {
@@ -97,7 +96,7 @@ export struct TopBar {
                         hilog.error(0x0000, 'TopBar', 'error code is ' + err.code);
                       }
                     })
-                }, (item: ActionInterface, index: number) => index + JSON.stringify(item))
+                }, (item: ActionInterface, idx: number) => idx + JSON.stringify(item))
               }
             }
           }
