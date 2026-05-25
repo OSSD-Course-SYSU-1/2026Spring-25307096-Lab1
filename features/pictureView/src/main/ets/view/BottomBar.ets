@@ -22,6 +22,7 @@ import { hilog } from '@kit.PerformanceAnalysisKit';
 @Component
 export struct BottomBar {
   @Consume('pageInfos') pageInfos: NavPathStack
+  @Consume('isFavorited') isFavorited: boolean;
 
   build() {
     Flex({
@@ -33,7 +34,10 @@ export struct BottomBar {
           Image(item.icon)
             .height(BaseConstants.DEFAULT_ICON_SIZE)
             .width(BaseConstants.DEFAULT_ICON_SIZE)
-          Text(item.icon_name)
+            .fillColor(this.isFavorited && item.icon === $r('app.media.ic_public_favor') ?
+              '#FF4444' : '')
+          Text(this.isFavorited && item.icon === $r('app.media.ic_public_favor') ?
+            $r('app.string.favorited') : item.icon_name)
             .fontFamily(BaseConstants.FONT_FAMILY_NORMAL)
             .fontSize(BaseConstants.FONT_SIZE_TEN)
             .fontWeight(BaseConstants.FONT_WEIGHT_FOUR)
@@ -45,6 +49,9 @@ export struct BottomBar {
               .getHostContext()?.resourceManager.getStringSync((item.icon_name as Resource).id) as string;
             if (pushPath === '编辑' || pushPath === 'edit') {
               this.pageInfos.pushPath(new NavPathInfo('pictureEdit', []));
+            }
+            if (item.icon === $r('app.media.ic_public_favor')) {
+              this.isFavorited = !this.isFavorited;
             }
           } catch (error) {
             let err = error as BusinessError;

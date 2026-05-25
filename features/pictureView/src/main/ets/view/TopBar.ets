@@ -25,6 +25,8 @@ const TITLE: string = '2020.12.24';
 export struct TopBar {
   @StorageLink('currentBreakpoint') currentBp: string = BreakpointConstants.BREAKPOINT_MD;
   @Consume('pageInfos') pageInfos: NavPathStack
+  @Consume('isFavorited') isFavorited: boolean;
+  @State showInfoDialog: boolean = false;
 
   build() {
     Flex({
@@ -68,11 +70,16 @@ export struct TopBar {
               .height(BaseConstants.DEFAULT_ICON_SIZE)
               .width(BaseConstants.DEFAULT_ICON_SIZE)
               .margin({ left: $r('app.float.detail_image_left') })
+              .onClick(() => {
+                this.showInfoDialog = true;
+              })
             if (this.currentBp === BreakpointConstants.BREAKPOINT_LG) {
               ForEach(PictureViewConstants.ACTIONS, (item: ActionInterface) => {
                 Image(item.icon)
                   .height(BaseConstants.DEFAULT_ICON_SIZE)
                   .width(BaseConstants.DEFAULT_ICON_SIZE)
+                  .fillColor(this.isFavorited && item.icon === $r('app.media.ic_public_favor') ?
+                    '#FF4444' : '')
                   .margin({ left: $r('app.float.detail_image_left') })
                   .onClick(() => {
                     try {
@@ -80,6 +87,9 @@ export struct TopBar {
                         .getHostContext()?.resourceManager.getStringSync((item.icon_name as Resource).id) as string;
                       if (pushPath === '编辑' || pushPath === 'edit') {
                         this.pageInfos.pushPath(new NavPathInfo('pictureEdit', []));
+                      }
+                      if (item.icon === $r('app.media.ic_public_favor')) {
+                        this.isFavorited = !this.isFavorited;
                       }
                     } catch (error) {
                       let err = error as BusinessError;
@@ -99,5 +109,67 @@ export struct TopBar {
       left: $r('app.float.top_bar_left'),
       right: $r('app.float.top_bar_right')
     })
+    // Image info dialog
+    if (this.showInfoDialog) {
+      Stack() {
+        Column() {
+          Column() {
+            Text($r('app.string.image_info_title'))
+              .fontSize(BaseConstants.FONT_SIZE_EIGHTEEN)
+              .fontWeight(BaseConstants.FONT_WEIGHT_FIVE)
+              .margin({ bottom: $r('app.float.image_margin') })
+            Divider()
+            Row() {
+              Text($r('app.string.image_name_label'))
+                .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+              Text('  IMG_20201224_001.jpg')
+                .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+                .fontColor('#666666')
+            }
+            .width(BaseConstants.FULL_WIDTH)
+            .margin({ top: $r('app.float.image_margin') })
+            Row() {
+              Text($r('app.string.image_size_label'))
+                .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+              Text('  4032 × 3024')
+                .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+                .fontColor('#666666')
+            }
+            .width(BaseConstants.FULL_WIDTH)
+            .margin({ top: $r('app.float.icon_padding_top') })
+            Row() {
+              Text($r('app.string.image_date_label'))
+                .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+              Text('  2020-12-24 10:30:00')
+                .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+                .fontColor('#666666')
+            }
+            .width(BaseConstants.FULL_WIDTH)
+            .margin({ top: $r('app.float.icon_padding_top') })
+            Button($r('app.string.image_info_close'))
+              .margin({ top: $r('app.float.image_margin') })
+              .onClick(() => {
+                this.showInfoDialog = false;
+              })
+          }
+          .padding($r('app.float.row_padding'))
+          .backgroundColor(Color.White)
+          .borderRadius(16)
+          .width('80%')
+        }
+        .width(BaseConstants.FULL_WIDTH)
+        .height(BaseConstants.FULL_HEIGHT)
+        .justifyContent(FlexAlign.Center)
+        .alignItems(HorizontalAlign.Center)
+      }
+      .position({ x: 0, y: 0 })
+      .width(BaseConstants.FULL_WIDTH)
+      .height(BaseConstants.FULL_HEIGHT)
+      .backgroundColor('#66000000')
+      .onClick(() => {
+        this.showInfoDialog = false;
+      })
+      .zIndex(100)
+    }
   }
 }

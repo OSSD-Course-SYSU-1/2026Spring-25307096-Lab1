@@ -2,23 +2,47 @@
   "string": [
     {
       "name": "ActionInterface1",
-      "value": "share"
+      "value": "Share"
     },
     {
       "name": "ActionInterface2",
-      "value": "save"
+      "value": "Favor"
     },
     {
       "name": "ActionInterface3",
-      "value": "edit"
+      "value": "Edit"
     },
     {
       "name": "ActionInterface4",
-      "value": "delete"
+      "value": "Delete"
     },
     {
       "name": "ActionInterface5",
-      "value": "more"
+      "value": "More"
+    },
+    {
+      "name": "favorited",
+      "value": "Favored"
+    },
+    {
+      "name": "image_info_title",
+      "value": "Image Info"
+    },
+    {
+      "name": "image_name_label",
+      "value": "Name:"
+    },
+    {
+      "name": "image_size_label",
+      "value": "Size:"
+    },
+    {
+      "name": "image_date_label",
+      "value": "Date:"
+    },
+    {
+      "name": "image_info_close",
+      "value": "Close"
     }
   ]
 }

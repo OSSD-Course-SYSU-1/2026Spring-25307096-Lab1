@@ -19,6 +19,30 @@
     {
       "name": "ActionInterface5",
       "value": "更多"
+    },
+    {
+      "name": "favorited",
+      "value": "已收藏"
+    },
+    {
+      "name": "image_info_title",
+      "value": "图片信息"
+    },
+    {
+      "name": "image_name_label",
+      "value": "文件名："
+    },
+    {
+      "name": "image_size_label",
+      "value": "尺寸："
+    },
+    {
+      "name": "image_date_label",
+      "value": "日期："
+    },
+    {
+      "name": "image_info_close",
+      "value": "关闭"
     }
   ]
 }

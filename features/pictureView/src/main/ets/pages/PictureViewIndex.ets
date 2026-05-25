@@ -21,12 +21,16 @@ import { BaseConstants, BreakpointConstants } from 'base';
 import { deviceInfo } from '@kit.BasicServicesKit';
 import { AlbumView } from 'albumview';
 import { PictureEdit } from 'pictureedit';
+import PictureViewConstants from '../constants/PictureViewConstants';
 
 @Preview
 @Component
 export struct PictureViewIndex {
   @StorageLink('currentBreakpoint') currentBp: string = BreakpointConstants.BREAKPOINT_MD;
   @Provide('pageInfos') pageInfos: NavPathStack = new NavPathStack()
+  @Provide('curImageIndex') curImageIndex: number = 0;
+  @Provide('imageTotal') imageTotal: number = PictureViewConstants.PICTURES.length;
+  @Provide('isFavorited') isFavorited: boolean = false;
 
   @Builder
   PageMap(name: string) {
