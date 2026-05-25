@@ -29,89 +29,89 @@ export struct TopBar {
   @State showInfoDialog: boolean = false;
 
   build() {
-    Flex({
-      direction: FlexDirection.Row,
-      alignItems: ItemAlign.Center,
-    }) {
-      Column() {
-        Flex({
-          justifyContent: FlexAlign.SpaceBetween,
-          direction: FlexDirection.Row,
-          alignItems: ItemAlign.Stretch
-        }) {
-          Row() {
-            Image($r('app.media.ic_public_back_black'))
-              .height(BaseConstants.DEFAULT_ICON_SIZE)
-              .width(BaseConstants.DEFAULT_ICON_SIZE)
-              .margin({ right: $r('app.float.back_image_right') })
-            Column() {
-              Text(TITLE)
-                .fontFamily(BaseConstants.FONT_FAMILY_MEDIUM)
-                .fontSize(BaseConstants.FONT_SIZE_TWENTY)
-                .fontWeight(BaseConstants.FONT_WEIGHT_FIVE)
-              Text($r('app.string.subtitle_infomation'))
-                .fontFamily(BaseConstants.FONT_FAMILY_NORMAL)
-                .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
-                .fontWeight(BaseConstants.FONT_WEIGHT_FOUR)
+    Stack() {
+      Flex({
+        direction: FlexDirection.Row,
+        alignItems: ItemAlign.Center,
+      }) {
+        Column() {
+          Flex({
+            justifyContent: FlexAlign.SpaceBetween,
+            direction: FlexDirection.Row,
+            alignItems: ItemAlign.Stretch
+          }) {
+            Row() {
+              Image($r('app.media.ic_public_back_black'))
+                .height(BaseConstants.DEFAULT_ICON_SIZE)
+                .width(BaseConstants.DEFAULT_ICON_SIZE)
+                .margin({ right: $r('app.float.back_image_right') })
+              Column() {
+                Text(TITLE)
+                  .fontFamily(BaseConstants.FONT_FAMILY_MEDIUM)
+                  .fontSize(BaseConstants.FONT_SIZE_TWENTY)
+                  .fontWeight(BaseConstants.FONT_WEIGHT_FIVE)
+                Text($r('app.string.subtitle_infomation'))
+                  .fontFamily(BaseConstants.FONT_FAMILY_NORMAL)
+                  .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+                  .fontWeight(BaseConstants.FONT_WEIGHT_FOUR)
+              }
+              .alignItems(HorizontalAlign.Start)
+              .padding($r('app.float.back_area_padding'))
             }
-            .alignItems(HorizontalAlign.Start)
-            .padding($r('app.float.back_area_padding'))
-          }
 
-          Row() {
-            Image($r('app.media.ic_public_picture'))
-              .height(BaseConstants.DEFAULT_ICON_SIZE)
-              .width(BaseConstants.DEFAULT_ICON_SIZE)
-              .autoResize(true)
-              .onClick(() => {
-                this.pageInfos.pushPath(new NavPathInfo('albumView', []));
-              })
-            Image($r('app.media.ic_public_detail'))
-              .height(BaseConstants.DEFAULT_ICON_SIZE)
-              .width(BaseConstants.DEFAULT_ICON_SIZE)
-              .margin({ left: $r('app.float.detail_image_left') })
-              .onClick(() => {
-                this.showInfoDialog = true;
-              })
-            if (this.currentBp === BreakpointConstants.BREAKPOINT_LG) {
-              ForEach(PictureViewConstants.ACTIONS, (item: ActionInterface) => {
-                Image(item.icon)
-                  .height(BaseConstants.DEFAULT_ICON_SIZE)
-                  .width(BaseConstants.DEFAULT_ICON_SIZE)
-                  .fillColor(this.isFavorited && item.icon === $r('app.media.ic_public_favor') ?
-                    '#FF4444' : '')
-                  .margin({ left: $r('app.float.detail_image_left') })
-                  .onClick(() => {
-                    try {
-                      let pushPath = this.getUIContext()
-                        .getHostContext()?.resourceManager.getStringSync((item.icon_name as Resource).id) as string;
-                      if (pushPath === '编辑' || pushPath === 'edit') {
-                        this.pageInfos.pushPath(new NavPathInfo('pictureEdit', []));
+            Row() {
+              Image($r('app.media.ic_public_picture'))
+                .height(BaseConstants.DEFAULT_ICON_SIZE)
+                .width(BaseConstants.DEFAULT_ICON_SIZE)
+                .autoResize(true)
+                .onClick(() => {
+                  this.pageInfos.pushPath(new NavPathInfo('albumView', []));
+                })
+              Image($r('app.media.ic_public_detail'))
+                .height(BaseConstants.DEFAULT_ICON_SIZE)
+                .width(BaseConstants.DEFAULT_ICON_SIZE)
+                .margin({ left: $r('app.float.detail_image_left') })
+                .onClick(() => {
+                  this.showInfoDialog = true;
+                })
+              if (this.currentBp === BreakpointConstants.BREAKPOINT_LG) {
+                ForEach(PictureViewConstants.ACTIONS, (item: ActionInterface) => {
+                  Image(item.icon)
+                    .height(BaseConstants.DEFAULT_ICON_SIZE)
+                    .width(BaseConstants.DEFAULT_ICON_SIZE)
+                    .fillColor(this.isFavorited && item.icon === $r('app.media.ic_public_favor') ?
+                      '#FF4444' : '')
+                    .margin({ left: $r('app.float.detail_image_left') })
+                    .onClick(() => {
+                      try {
+                        let pushPath = this.getUIContext()
+                          .getHostContext()?.resourceManager.getStringSync((item.icon_name as Resource).id) as string;
+                        if (pushPath === '编辑' || pushPath === 'edit') {
+                          this.pageInfos.pushPath(new NavPathInfo('pictureEdit', []));
+                        }
+                        if (item.icon === $r('app.media.ic_public_favor')) {
+                          this.isFavorited = !this.isFavorited;
+                        }
+                      } catch (error) {
+                        let err = error as BusinessError;
+                        hilog.error(0x0000, 'TopBar', 'error code is ' + err.code);
                       }
-                      if (item.icon === $r('app.media.ic_public_favor')) {
-                        this.isFavorited = !this.isFavorited;
-                      }
-                    } catch (error) {
-                      let err = error as BusinessError;
-                      hilog.error(0x0000, 'TopBar', 'error code is ' + err.code);
-                    }
-                  })
-              }, (item: ActionInterface, index: number) => index + JSON.stringify(item))
+                    })
+                }, (item: ActionInterface, index: number) => index + JSON.stringify(item))
+              }
             }
           }
         }
       }
-    }
-    .height($r('app.float.top_bar_height'))
-    .margin({
-      top: $r('app.float.top_bar_top'),
-      bottom: $r('app.float.top_bar_bottom'),
-      left: $r('app.float.top_bar_left'),
-      right: $r('app.float.top_bar_right')
-    })
-    // Image info dialog
-    if (this.showInfoDialog) {
-      Stack() {
+      .height($r('app.float.top_bar_height'))
+      .margin({
+        top: $r('app.float.top_bar_top'),
+        bottom: $r('app.float.top_bar_bottom'),
+        left: $r('app.float.top_bar_left'),
+        right: $r('app.float.top_bar_right')
+      })
+      // Image info dialog overlay
+      if (this.showInfoDialog) {
         Column() {
           Column() {
             Text($r('app.string.image_info_title'))
@@ -161,15 +161,12 @@ export struct TopBar {
         .height(BaseConstants.FULL_HEIGHT)
         .justifyContent(FlexAlign.Center)
         .alignItems(HorizontalAlign.Center)
+        .backgroundColor('#66000000')
+        .onClick(() => {
+          this.showInfoDialog = false;
+        })
       }
-      .position({ x: 0, y: 0 })
-      .width(BaseConstants.FULL_WIDTH)
-      .height(BaseConstants.FULL_HEIGHT)
-      .backgroundColor('#66000000')
-      .onClick(() => {
-        this.showInfoDialog = false;
-      })
-      .zIndex(100)
     }
+    .width(BaseConstants.FULL_WIDTH)
   }
 }
