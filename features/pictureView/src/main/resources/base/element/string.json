@@ -19,6 +19,34 @@
     {
       "name": "ActionInterface5",
       "value": "more"
+    },
+    {
+      "name": "favorited",
+      "value": "Favored"
+    },
+    {
+      "name": "image_info_title",
+      "value": "Image Info"
+    },
+    {
+      "name": "image_name_label",
+      "value": "Name:"
+    },
+    {
+      "name": "image_size_label",
+      "value": "Size:"
+    },
+    {
+      "name": "image_date_label",
+      "value": "Date:"
+    },
+    {
+      "name": "image_info_close",
+      "value": "Close"
+    },
+    {
+      "name": "subtitle_infomation",
+      "value": "54 pictures"
     }
   ]
 }

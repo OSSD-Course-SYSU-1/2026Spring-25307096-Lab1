@@ -15,7 +15,6 @@
 
 import { BreakpointConstants } from 'base';
 import { Adaptive } from '../viewmodel/AdaptiveViewModel'
-import PictureViewConstants from '../constants/PictureViewConstants';
 
 @Component
 export struct CenterPart {
@@ -25,8 +24,8 @@ export struct CenterPart {
   @State rotationAngle: number = 0;
   @Consume('curImageIndex') curImageIndex: number;
   @Consume('imageTotal') imageTotal: number;
+  @Consume('pictureList') pictureList: Resource[];
 
-  // Switch to next image (swipe left)
   nextImage(): void {
     if (this.curImageIndex < this.imageTotal - 1) {
       this.curImageIndex += 1;
@@ -36,7 +35,6 @@ export struct CenterPart {
     }
   }
 
-  // Switch to previous image (swipe right)
   prevImage(): void {
     if (this.curImageIndex > 0) {
       this.curImageIndex -= 1;
@@ -49,17 +47,14 @@ export struct CenterPart {
   build() {
     Flex({ direction: FlexDirection.Column }) {
       Blank()
-      // [Start center_part]
       Row() {
         Column() {
-          Image(PictureViewConstants.PICTURES[this.curImageIndex])
+          Image(this.pictureList[this.curImageIndex])
             .autoResize(true)
         }
       }
-      // [StartExclude center_part]
       .height(Adaptive.PICTURE_HEIGHT(this.currentBp))
       .width(Adaptive.PICTURE_WIDTH(this.currentBp))
-      // [EndExclude center_part]
       .scale({ x: this.scaleValue, y: this.scaleValue, z: 1 })
       .rotate({ angle: this.rotationAngle })
       .animation({ duration: 200 })
@@ -91,11 +86,9 @@ export struct CenterPart {
             })
         )
       )
-      // [End center_part]
 
       Blank()
         .height(this.currentBp === BreakpointConstants.BREAKPOINT_SM ? $r('app.float.center_blank_height_lg') : 0)
-      // Image counter indicator
       Row() {
         Text(`${this.curImageIndex + 1} / ${this.imageTotal}`)
           .fontSize($r('app.float.font_size_twelve'))

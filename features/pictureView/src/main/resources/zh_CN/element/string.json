@@ -43,6 +43,10 @@
     {
       "name": "image_info_close",
       "value": "关闭"
+    },
+    {
+      "name": "subtitle_infomation",
+      "value": "54张图片"
     }
   ]
 }

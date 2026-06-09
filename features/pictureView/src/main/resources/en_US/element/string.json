@@ -43,6 +43,10 @@
     {
       "name": "image_info_close",
       "value": "Close"
+    },
+    {
+      "name": "subtitle_infomation",
+      "value": "54 pictures"
     }
   ]
 }

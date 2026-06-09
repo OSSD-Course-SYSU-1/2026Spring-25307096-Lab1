@@ -14,25 +14,40 @@
  */
 
 import { BreakpointConstants } from 'base';
-import PictureViewConstants from '../constants/PictureViewConstants';
 
 const IMAGE_ASPECT_RATIO: number = 0.5;
 
 @Component
 export struct PreviewLists {
   @StorageLink('currentBreakpoint') currentBp: string = BreakpointConstants.BREAKPOINT_MD;
+  @Consume('pictureList') pictureList: Resource[];
+  @Consume('curImageIndex') curImageIndex: number;
+  private scroller: Scroller = new Scroller();
+
+  aboutToAppear(): void {
+    this.scroller.scrollToIndex(this.curImageIndex);
+  }
 
   build() {
-    List({ initialIndex: 1 }) {
-      ForEach(PictureViewConstants.PICTURES, (item: Resource) => {
+    List({ scroller: this.scroller }) {
+      ForEach(this.pictureList, (item: Resource, index: number) => {
         ListItem() {
           Image(item)
             .height($r('app.float.list_image_height'))
             .aspectRatio(IMAGE_ASPECT_RATIO)
             .autoResize(true)
             .margin({ left: $r('app.float.list_image_margin_left') })
+            .border({
+              width: index === this.curImageIndex ? 2 : 0,
+              color: index === this.curImageIndex ? '#FFFFFF' : 'transparent'
+            })
+            .opacity(index === this.curImageIndex ? 1.0 : 0.5)
+            .onClick(() => {
+              this.curImageIndex = index;
+              this.scroller.scrollToIndex(index);
+            })
         }
-      }, (item: Resource, index: number) => index + JSON.stringify(item))
+      }, (_item: Resource, index: number) => index.toString())
     }
     .height($r('app.float.list_image_height'))
     .padding({
