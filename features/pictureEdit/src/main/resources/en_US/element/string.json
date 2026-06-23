@@ -83,6 +83,58 @@
     {
       "name": "AiPresetDesc3",
       "value": "Landscape boost"
+    },
+    {
+      "name": "AiPresetName4",
+      "value": "Dramatic"
+    },
+    {
+      "name": "AiPresetDesc4",
+      "value": "High contrast"
+    },
+    {
+      "name": "AiPresetName5",
+      "value": "Vintage"
+    },
+    {
+      "name": "AiPresetDesc5",
+      "value": "Sepia wash"
+    },
+    {
+      "name": "AiPresetName6",
+      "value": "B&W"
+    },
+    {
+      "name": "AiPresetDesc6",
+      "value": "Desaturate"
+    },
+    {
+      "name": "AiPresetName7",
+      "value": "Portrait"
+    },
+    {
+      "name": "AiPresetDesc7",
+      "value": "Warm skin"
+    },
+    {
+      "name": "AiPresetName8",
+      "value": "Food"
+    },
+    {
+      "name": "AiPresetDesc8",
+      "value": "Saturated"
+    },
+    {
+      "name": "ai_intensity",
+      "value": "Intensity"
+    },
+    {
+      "name": "ai_reset",
+      "value": "Reset"
+    },
+    {
+      "name": "ai_apply",
+      "value": "Apply"
     }
   ]
 }

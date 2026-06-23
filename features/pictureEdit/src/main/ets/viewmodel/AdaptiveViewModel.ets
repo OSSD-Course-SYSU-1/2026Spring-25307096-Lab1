@@ -32,6 +32,47 @@ export class Adaptive {
     ).GetValue(currentBreakpoint);
   }
 }
+
+/**
+ * Color matrix utilities — 4x5 matrices for ArkUI .colorFilter().
+ * Each matrix is a 20-element number[]:
+ *   [Rr,Rg,Rb,Ra,Ro, Gr,Gg,Gb,Ga,Go, Br,Bg,Bb,Ba,Bo, Ar,Ag,Ab,Aa,Ao]
+ * where Ro/Go/Bo/Ao are channel offsets.
+ */
+export class ColorMatrix {
+  /** Identity matrix — passes through unchanged. */
+  static readonly IDENTITY: number[] = [
+    1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0
+  ];
+
+  /**
+   * Linear interpolation between identity and a target matrix.
+   * @param target   The preset color matrix to blend toward.
+   * @param t        Intensity factor in [0, 1].  0 = identity, 1 = full target.
+   */
+  static lerp(target: number[], t: number): number[] {
+    const result: number[] = [];
+    for (let i = 0; i < 20; i++) {
+      result[i] = ColorMatrix.IDENTITY[i] + (target[i] - ColorMatrix.IDENTITY[i]) * t;
+    }
+    return result;
+  }
+
+  /**
+   * Linear interpolation between two arbitrary matrices.
+   */
+  static lerpBetween(a: number[], b: number[], t: number): number[] {
+    const result: number[] = [];
+    for (let i = 0; i < 20; i++) {
+      result[i] = a[i] + (b[i] - a[i]) * t;
+    }
+    return result;
+  }
+}
+
 export interface ToolsAndName {
   pic: Resource
   pic_name: ResourceStr

@@ -83,6 +83,58 @@
     {
       "name": "AiPresetDesc3",
       "value": "增强绿色与蓝色"
+    },
+    {
+      "name": "AiPresetName4",
+      "value": "高对比"
+    },
+    {
+      "name": "AiPresetDesc4",
+      "value": "强烈明暗反差"
+    },
+    {
+      "name": "AiPresetName5",
+      "value": "复古胶片"
+    },
+    {
+      "name": "AiPresetDesc5",
+      "value": "棕褐色胶片感"
+    },
+    {
+      "name": "AiPresetName6",
+      "value": "黑白"
+    },
+    {
+      "name": "AiPresetDesc6",
+      "value": "去饱和经典影调"
+    },
+    {
+      "name": "AiPresetName7",
+      "value": "人像美颜"
+    },
+    {
+      "name": "AiPresetDesc7",
+      "value": "暖色柔化肤质"
+    },
+    {
+      "name": "AiPresetName8",
+      "value": "美食滤镜"
+    },
+    {
+      "name": "AiPresetDesc8",
+      "value": "提升食物鲜艳度"
+    },
+    {
+      "name": "ai_intensity",
+      "value": "强度"
+    },
+    {
+      "name": "ai_reset",
+      "value": "重置"
+    },
+    {
+      "name": "ai_apply",
+      "value": "应用"
     }
   ]
 }

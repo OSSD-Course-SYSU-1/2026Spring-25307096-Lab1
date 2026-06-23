@@ -15,7 +15,7 @@
 
 import { BaseConstants, BreakpointConstants } from 'base';
 import PictureEditConstants from '../constants/PictureEditConstants';
-import { AiPreset } from '../viewmodel/AdaptiveViewModel';
+import { AiPreset, ColorMatrix } from '../viewmodel/AdaptiveViewModel';
 import { deviceInfo } from '@kit.BasicServicesKit';
 
 interface ToolsAndName {
@@ -36,11 +36,13 @@ export struct PictureEdit {
   @State windowDirection: boolean = true;
   @State pictureWidth: string = BaseConstants.FULL_WIDTH;
   @State selectedTool: number = -1;
-  @State activeColorFilter: number[] = [1, 0, 0, 0, 0,
-    0, 1, 0, 0, 0,
-    0, 0, 1, 0, 0,
-    0, 0, 0, 1, 0];
+  @State activeColorFilter: number[] = [...PictureEditConstants.IDENTITY];
   @Consume('pageInfos') pageInfos: NavPathStack;
+
+  /* ---------- AI 修图专属状态 ---------- */
+  @State activePresetIndex: number = -1;
+  @State aiIntensity: number = 50;
+  @State showOriginal: boolean = false;
 
   isColumnLayout(bp: string, direction: Boolean): Boolean {
     if (bp === BreakpointConstants.BREAKPOINT_SM) {
@@ -59,6 +61,9 @@ export struct PictureEdit {
     return !direction;
   }
 
+  /* =================================================================
+   *  Top Bar
+   * ================================================================= */
   @Builder
   topBar() {
     Row() {
@@ -112,6 +117,9 @@ export struct PictureEdit {
     .backgroundColor(Color.Black)
   }
 
+  /* =================================================================
+   *  Center Picture — with long-press-to-peek-original gesture
+   * ================================================================= */
   @Builder
   centerPicture() {
     Flex({ justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
@@ -119,13 +127,27 @@ export struct PictureEdit {
         .interpolation(ImageInterpolation.High)
         .objectFit(ImageFit.Cover)
         .autoResize(true)
-        .colorFilter(this.activeColorFilter)
+        .colorFilter(this.showOriginal ? PictureEditConstants.IDENTITY : this.activeColorFilter)
         .height(PictureEditConstants.PICTURE_HEIGHT)
         .width(this.pictureWidth)
         .constraintSize({ maxWidth: deviceInfo.deviceType === BaseConstants.DEVICE_2IN1 ? 900 : undefined })
+        .gesture(
+          LongPressGesture({ repeat: false, duration: 200 })
+            .onAction(() => {
+              if (this.selectedTool === 4 && this.activePresetIndex >= 0) {
+                this.showOriginal = true;
+              }
+            })
+            .onActionEnd(() => {
+              this.showOriginal = false;
+            })
+        )
     }
   }
 
+  /* =================================================================
+   *  Option Region
+   * ================================================================= */
   @Builder
   optionRegion() {
     Flex({
@@ -151,27 +173,48 @@ export struct PictureEdit {
     .padding($r('app.float.row_padding'))
   }
 
+  /* =================================================================
+   *  Slider — AI mode drives intensity; else generic value
+   * ================================================================= */
   @Builder
   sliderBar() {
     Column() {
+      if (this.selectedTool === 4) {
+        Row({ space: 8 }) {
+          Text($r('app.string.ai_intensity'))
+            .fontSize(BaseConstants.FONT_SIZE_TEN)
+            .fontColor('#99000000')
+        }
+        .width(BaseConstants.FULL_WIDTH)
+        .justifyContent(FlexAlign.Center)
+        .margin({ bottom: 4 })
+      }
       Slider({
-        value: this.outSetValueOne,
+        value: this.selectedTool === 4 ? this.aiIntensity : this.outSetValueOne,
         min: 0,
         max: 100,
         style: SliderStyle.OutSet,
         direction: this.isColumnLayout(this.currentBp, this.windowDirection) ? Axis.Horizontal : Axis.Vertical,
         reverse: this.isColumnLayout(this.currentBp, this.windowDirection) ? false : true
       })
-        .blockColor(Color.White)
-        .selectedColor(Color.White)
+        .blockColor(this.selectedTool === 4 ? '#4DA6FF' : Color.White)
+        .selectedColor(this.selectedTool === 4 ? '#4DA6FF' : Color.White)
         .trackColor($r('app.color.track_color'))
-        .showTips(true)
+        .showTips(this.selectedTool === 4)
         .onChange((value: number) => {
-          this.outSetValueOne = value;
+          if (this.selectedTool === 4) {
+            this.aiIntensity = value;
+            this.updateAiFilter();
+          } else {
+            this.outSetValueOne = value;
+          }
         })
     }
   }
 
+  /* =================================================================
+   *  Filter Thumbnails (tools 0-3)
+   * ================================================================= */
   @Builder
   filterWindows() {
     List() {
@@ -197,6 +240,9 @@ export struct PictureEdit {
     .listDirection(this.isColumnLayout(this.currentBp, this.windowDirection) ? Axis.Horizontal : Axis.Vertical)
   }
 
+  /* =================================================================
+   *  Bottom Toolbar
+   * ================================================================= */
   @Builder
   bottomBar() {
     Flex({
@@ -220,9 +266,15 @@ export struct PictureEdit {
         }
         .onClick(() => {
           if (this.selectedTool === toolIndex) {
+            // Deselect
             this.selectedTool = -1;
+            this.activePresetIndex = -1;
+            this.activeColorFilter = [...PictureEditConstants.IDENTITY];
           } else {
             this.selectedTool = toolIndex;
+            if (toolIndex !== 4) {
+              this.activePresetIndex = -1;
+            }
           }
         })
       }, (item: ToolsAndName, toolIndex: number) => toolIndex.toString()
@@ -230,50 +282,117 @@ export struct PictureEdit {
     }
   }
 
-  applyAiPreset(preset: AiPreset): void {
-    this.outSetValueOne = preset.sliderValue;
-    this.activeColorFilter = [...preset.colorFilter];
+  /* =================================================================
+   *  AI core — lerp between identity and selected preset matrix
+   * ================================================================= */
+  updateAiFilter(): void {
+    if (this.activePresetIndex < 0) {
+      return;
+    }
+    const preset = PictureEditConstants.aiPresets[this.activePresetIndex];
+    const t: number = this.aiIntensity / 100;
+    this.activeColorFilter = ColorMatrix.lerp(preset.colorFilter, t);
   }
 
+  selectAiPreset(index: number): void {
+    if (this.activePresetIndex === index) {
+      // Toggle off
+      this.activePresetIndex = -1;
+      this.activeColorFilter = [...PictureEditConstants.IDENTITY];
+      return;
+    }
+    this.activePresetIndex = index;
+    const preset = PictureEditConstants.aiPresets[index];
+    this.aiIntensity = preset.sliderValue;
+    this.updateAiFilter();
+  }
+
+  resetAi(): void {
+    this.activePresetIndex = -1;
+    this.aiIntensity = 50;
+    this.activeColorFilter = [...PictureEditConstants.IDENTITY];
+    this.showOriginal = false;
+  }
+
+  /* =================================================================
+   *  AI Panel — 2×4 grid of preset cards, active highlight, controls
+   * ================================================================= */
   @Builder
   aiPanel() {
     Column({ space: 12 }) {
-      Text($r('app.string.ToolsAndName5'))
-        .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
-        .fontColor(Color.White)
-        .fontWeight(BaseConstants.FONT_WEIGHT_FIVE)
-        .width(BaseConstants.FULL_WIDTH)
-        .padding({ left: 12 })
-      ForEach(PictureEditConstants.aiPresets, (preset: AiPreset, index: number) => {
-        Row() {
-          Column() {
-            Text(preset.name)
-              .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
-              .fontColor(Color.White)
-              .fontWeight(BaseConstants.FONT_WEIGHT_FIVE)
-            Text(preset.desc)
-              .fontSize(BaseConstants.FONT_SIZE_TEN)
-              .fontColor('#99000000')
-              .margin({ top: 4 })
-          }
-          .alignItems(HorizontalAlign.Start)
-          .layoutWeight(1)
-          .padding({ left: 12, right: 12 })
-          Button($r('app.string.edit'))
+      /* Title */
+      Row() {
+        Text($r('app.string.ToolsAndName5'))
+          .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+          .fontColor(Color.White)
+          .fontWeight(BaseConstants.FONT_WEIGHT_FIVE)
+        Blank()
+        if (this.activePresetIndex >= 0) {
+          Text($r('app.string.ai_reset'))
             .fontSize(BaseConstants.FONT_SIZE_TEN)
-            .height(28)
-            .backgroundColor('#4DA6FF')
-            .borderRadius(14)
+            .fontColor('#4DA6FF')
             .onClick(() => {
-              this.applyAiPreset(preset);
+              this.resetAi();
             })
         }
-        .width('100%')
-        .height(56)
-        .backgroundColor('#33FFFFFF')
-        .borderRadius(8)
-        .padding({ left: 8, right: 8 })
-      }, (preset: AiPreset, index: number) => index.toString())
+      }
+      .width(BaseConstants.FULL_WIDTH)
+      .padding({ left: 4, right: 4 })
+
+      /* Preset grid */
+      Grid() {
+        ForEach(PictureEditConstants.aiPresets, (preset: AiPreset, index: number) => {
+          GridItem() {
+            Column({ space: 6 }) {
+              Text(preset.name)
+                .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+                .fontColor(this.activePresetIndex === index ? '#FFFFFF' : '#CCFFFFFF')
+                .fontWeight(this.activePresetIndex === index
+                  ? BaseConstants.FONT_WEIGHT_FIVE : BaseConstants.FONT_WEIGHT_FOUR)
+              Text(preset.desc)
+                .fontSize(BaseConstants.FONT_SIZE_TEN)
+                .fontColor(this.activePresetIndex === index ? '#99FFFFFF' : '#66FFFFFF')
+                .maxLines(1)
+                .textOverflow({ overflow: TextOverflow.Ellipsis })
+            }
+            .width('100%')
+            .height(52)
+            .justifyContent(FlexAlign.Center)
+            .alignItems(HorizontalAlign.Center)
+            .backgroundColor(this.activePresetIndex === index ? '#4DA6FF' : '#33FFFFFF')
+            .borderRadius(10)
+            .border({
+              width: this.activePresetIndex === index ? 1.5 : 0,
+              color: '#4DA6FF',
+              radius: 10
+            })
+            .onClick(() => {
+              this.selectAiPreset(index);
+            })
+          }
+        }, (preset: AiPreset, index: number) => index.toString())
+      }
+      .columnsTemplate('1fr 1fr')
+      .rowsGap(8)
+      .columnsGap(8)
+      .width(BaseConstants.FULL_WIDTH)
+      .height(140)
+
+      /* Apply hint — shown when a preset is active */
+      if (this.activePresetIndex >= 0) {
+        Row() {
+          Text($r('app.string.ai_reset'))
+            .fontSize(BaseConstants.FONT_SIZE_TEN)
+            .fontColor('#99000000')
+          Blank()
+          Text($r('app.string.ai_apply'))
+            .fontSize(BaseConstants.FONT_SIZE_TEN)
+            .fontColor('#4DA6FF')
+            .fontWeight(BaseConstants.FONT_WEIGHT_FIVE)
+        }
+        .width(BaseConstants.FULL_WIDTH)
+        .padding({ left: 4, right: 4 })
+      }
     }
     .width(BaseConstants.FULL_WIDTH)
     .padding({ left: 12, right: 12, top: 8, bottom: 8 })
