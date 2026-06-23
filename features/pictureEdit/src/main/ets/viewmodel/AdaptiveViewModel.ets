@@ -90,3 +90,65 @@ export interface AiPreset {
   sliderValue: number;
   colorFilter: number[];
 }
+
+/**
+ * Base overlay item — text or sticker placed on top of the image.
+ */
+export interface TextOverlay {
+  id: string;
+  type: 'text';
+  text: string;
+  x: number;          // center X as fraction 0-1 relative to image
+  y: number;          // center Y as fraction 0-1 relative to image
+  fontSize: number;   // sp
+  color: string;      // hex like '#FFFFFF'
+  opacity: number;    // 0.2 - 1.0
+  rotation: number;   // degrees 0-360
+  scale: number;      // 0.5 - 3.0
+}
+
+export interface StickerOverlay {
+  id: string;
+  type: 'sticker';
+  emoji: string;      // emoji character, e.g. '😀'
+  x: number;
+  y: number;
+  scale: number;      // 0.5 - 3.0
+  rotation: number;   // 0-360
+  opacity: number;    // 0.3 - 1.0
+}
+
+export type OverlayItem = TextOverlay | StickerOverlay;
+
+/**
+ * A point on the canvas, used for brush strokes.
+ */
+export interface Point {
+  x: number;
+  y: number;
+}
+
+/**
+ * A rectangular region on the canvas.
+ */
+export interface Rect {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
+/**
+ * A mosaic or blur region on the canvas.
+ */
+export interface MosaicRegion {
+  id: string;
+  // Brush mode
+  points?: Array<Point>;
+  brushSize: number;
+  // Box mode
+  rect?: Rect;
+  // Common
+  type: 'mosaic' | 'blur';
+  mosaicSize?: number;
+}
