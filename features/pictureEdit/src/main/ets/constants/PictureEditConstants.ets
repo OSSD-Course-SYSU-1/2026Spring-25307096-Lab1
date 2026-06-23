@@ -64,7 +64,25 @@ export default class PictureEditConstants {
     },
     {
       pic: $r("app.media.tools_3"), pic_name: $r('app.string.ToolsAndName5')
+    },
+    {
+      pic: $r("app.media.tools_4"), pic_name: $r('app.string.ToolsAndName6')
+    },
+    {
+      pic: $r("app.media.tools_2"), pic_name: $r('app.string.ToolsAndName7')
     }];
+  /** Emoji stickers — 18 common symbols rendered as text. */
+  static readonly STICKER_EMOJI: string[] = [
+    '😀', '😂', '❤️', '👍', '🎉', '⭐',
+    '🌸', '🔥', '💯', '✨', '🌈', '🎂',
+    '📸', '🎨', '🎵', '☕', '🍕', '⚽'
+  ];
+
+  /** Preset text colors for watermark. */
+  static readonly TEXT_COLORS: string[] = [
+    '#FFFFFF', '#000000', '#FF4444', '#FFD700',
+    '#4DA6FF', '#4CAF50', '#FF9800', '#9C27B0'
+  ];
   /**
    * ================================================================
    * AI Presets — 8 color directions. Slider controls intensity.
