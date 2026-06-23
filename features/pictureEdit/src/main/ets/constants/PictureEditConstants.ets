@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { PicAndName, ToolsAndName } from '../viewmodel/AdaptiveViewModel';
+import { PicAndName, ToolsAndName, AiPreset } from '../viewmodel/AdaptiveViewModel';
 
 export default class PictureEditConstants {
   /**
@@ -55,7 +55,42 @@ export default class PictureEditConstants {
     },
     {
       pic: $r("app.media.tools_4"), pic_name: $r('app.string.ToolsAndName4')
+    },
+    {
+      pic: $r("app.media.tools_3"), pic_name: $r('app.string.ToolsAndName5')
     }];
+  /**
+   * AI presets.
+   */
+  static aiPresets: AiPreset[] = [
+    {
+      name: $r('app.string.AiPresetName1'),
+      desc: $r('app.string.AiPresetDesc1'),
+      sliderValue: 60,
+      colorFilter: [1.1, 0, 0, 0, 0,
+        0, 1.1, 0, 0, 0,
+        0, 0, 1.1, 0, 0,
+        0, 0, 0, 1, 0]
+    },
+    {
+      name: $r('app.string.AiPresetName2'),
+      desc: $r('app.string.AiPresetDesc2'),
+      sliderValue: 45,
+      colorFilter: [1.05, 0, 0, 0, 8,
+        0, 1.02, 0, 0, 4,
+        0, 0, 0.98, 0, 2,
+        0, 0, 0, 1, 0]
+    },
+    {
+      name: $r('app.string.AiPresetName3'),
+      desc: $r('app.string.AiPresetDesc3'),
+      sliderValue: 70,
+      colorFilter: [1, 0, 0, 0, 0,
+        0, 1.15, 0, 0, 0,
+        0, 0, 1.2, 0, 0,
+        0, 0, 0, 1, 0]
+    }
+  ];
   /**
    * Filter name.
    */

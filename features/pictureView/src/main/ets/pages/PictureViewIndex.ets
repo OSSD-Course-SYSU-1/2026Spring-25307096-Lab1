@@ -21,8 +21,9 @@ import { BaseConstants, BreakpointConstants } from 'base';
 import { deviceInfo } from '@kit.BasicServicesKit';
 import { AlbumView } from 'albumview';
 import { PictureEdit } from 'pictureedit';
-import PictureViewConstants from '../constants/PictureViewConstants';
+import PictureViewConstants, { ActionInterface } from '../constants/PictureViewConstants';
 import { FavoritesStore } from '../utils/FavoritesStore';
+import { DeletedSnapshot } from '../utils/FavoritesStore';
 
 @Preview
 @Component
@@ -37,6 +38,10 @@ export struct PictureViewIndex {
   @StorageLink('fav_toggle_idx') @Watch('onFavToggle') favToggleIdx: number = -1;
   @StorageLink('delete_idx') @Watch('onDeleteTrigger') deleteIdx: number = -1;
   @StorageLink('show_info_dialog') showInfoDialog: boolean = false;
+
+  @State deletedSnapshot: DeletedSnapshot | null = null;
+  @State showUndoSnackbar: boolean = false;
+  private undoTimer: number = -1;
 
   aboutToAppear(): void {
     let ctx = this.getUIContext().getHostContext();
@@ -81,6 +86,17 @@ export struct PictureViewIndex {
     if (this.pictureList.length <= 1) {
       return;
     }
+    // Clear previous undo timer
+    if (this.undoTimer !== -1) {
+      clearTimeout(this.undoTimer);
+      this.undoTimer = -1;
+    }
+    // Save snapshot before deleting
+    this.deletedSnapshot = {
+      picture: this.pictureList[index],
+      index: index,
+      favorites: [...this.favoritedIndices]
+    };
     const result = FavoritesStore.deleteAndReindex(this.pictureList, this.favoritedIndices, index);
     this.pictureList = result.list;
     this.favoritedIndices = result.favorites;
@@ -92,6 +108,56 @@ export struct PictureViewIndex {
     if (ctx !== undefined) {
       FavoritesStore.save(ctx, this.favoritedIndices);
     }
+    // Show undo snackbar
+    this.showUndoSnackbar = true;
+    // Auto-dismiss after 5 seconds
+    this.undoTimer = setTimeout(() => {
+      this.clearUndoSnapshot();
+    }, 5000);
+  }
+
+  handleUndoDelete(): void {
+    if (this.deletedSnapshot === null) {
+      return;
+    }
+    if (this.undoTimer !== -1) {
+      clearTimeout(this.undoTimer);
+      this.undoTimer = -1;
+    }
+    const snap = this.deletedSnapshot;
+    // Rebuild list with deleted picture inserted back at original position
+    let newList: Resource[] = [];
+    for (let i = 0; i < this.pictureList.length; i++) {
+      if (i === snap.index) {
+        newList.push(snap.picture);
+      }
+      newList.push(this.pictureList[i]);
+    }
+    if (snap.index >= this.pictureList.length) {
+      newList.push(snap.picture);
+    }
+    this.pictureList = newList;
+    this.favoritedIndices = snap.favorites;
+    this.imageTotal = newList.length;
+    if (this.curImageIndex >= snap.index) {
+      this.curImageIndex = snap.index;
+    }
+    let ctx = this.getUIContext().getHostContext();
+    if (ctx !== undefined) {
+      FavoritesStore.save(ctx, this.favoritedIndices);
+    }
+    this.showUndoSnackbar = false;
+    this.deletedSnapshot = null;
+  }
+
+  clearUndoSnapshot(): void {
+    this.showUndoSnackbar = false;
+    this.deletedSnapshot = null;
+    this.undoTimer = -1;
+  }
+
+  isFavoritedLg(): boolean {
+    return this.favoritedIndices.indexOf(this.curImageIndex) !== -1;
   }
 
   @Builder
@@ -107,23 +173,76 @@ export struct PictureViewIndex {
   build() {
     Stack() {
       Navigation(this.pageInfos) {
-        Flex({
-          direction: FlexDirection.Column,
-          alignItems: ItemAlign.Center
-        }) {
+        Flex({ direction: FlexDirection.Column }) {
           TopBar()
-          CenterPart()
+          if (this.currentBp === BreakpointConstants.BREAKPOINT_LG) {
+            Flex({ direction: FlexDirection.Row }) {
+              CenterPart()
+                .layoutWeight(3)
+              Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center }) {
+                PreviewLists({ isVertical: true })
+                  .layoutWeight(1)
+                Row() {
+                  ForEach(PictureViewConstants.ACTIONS, (item: ActionInterface, index: number) => {
+                    if (index === 1) {
+                      Column() {
+                        Image(item.icon).height(24).width(24)
+                          .fillColor(this.isFavoritedLg() ? '#FF4444' : '#999999')
+                        Text(this.isFavoritedLg() ? $r('app.string.favorited') : item.icon_name)
+                          .fontSize(10).margin({ top: 4 })
+                      }.width('18%').onClick(() => {
+                        AppStorage.setOrCreate<number>('fav_toggle_idx', this.curImageIndex);
+                      })
+                    } else if (index === 2) {
+                      Column() {
+                        Image(item.icon).height(24).width(24).fillColor('#4CAF50')
+                        Text(item.icon_name).fontSize(10).margin({ top: 4 })
+                      }.width('18%').onClick(() => {
+                        this.pageInfos.pushPath(new NavPathInfo('pictureEdit', []));
+                      })
+                    } else if (index === 3) {
+                      Column() {
+                        Image(item.icon).height(24).width(24).fillColor('#FF5252')
+                        Text(item.icon_name).fontSize(10).margin({ top: 4 })
+                      }.width('18%').onClick(() => {
+                        AppStorage.setOrCreate<number>('delete_idx', this.curImageIndex);
+                      })
+                    } else {
+                      Column() {
+                        Image(item.icon).height(24).width(24).fillColor(index === 0 ? '#4DA6FF' : '#999999')
+                        Text(item.icon_name).fontSize(10).margin({ top: 4 })
+                      }.width('18%')
+                    }
+                  })
+                }
+                .width('90%')
+                .justifyContent(FlexAlign.SpaceEvenly)
+                .padding({ top: 12, bottom: 12 })
+              }
+              .layoutWeight(2)
+              .padding({ left: 12 })
+            }
             .flexGrow(1)
-          PreviewLists()
-          if (this.currentBp !== BreakpointConstants.BREAKPOINT_LG) {
-            BottomBar()
+            .alignItems(VerticalAlign.Center)
+          } else {
+            Flex({
+              direction: FlexDirection.Column,
+              alignItems: ItemAlign.Center
+            }) {
+              CenterPart()
+                .flexGrow(1)
+              PreviewLists({ isVertical: false })
+              BottomBar()
+            }
+            .flexGrow(1)
           }
-        }.padding({
+        }
+        .padding({
           top: deviceInfo.deviceType === BaseConstants.DEVICE_2IN1 ? '0vp' : $r('app.float.device_padding_top'),
           bottom: deviceInfo.deviceType !== BaseConstants.DEVICE_2IN1 ? $r('app.float.tab_content_pb') : '0vp'
         })
       }
-      .mode(NavigationMode.Stack)
+      .mode(NavigationMode.Auto)
       .height(BaseConstants.FULL_HEIGHT)
       .width(BaseConstants.FULL_WIDTH)
       .navDestination(this.PageMap)
@@ -131,6 +250,34 @@ export struct PictureViewIndex {
       .hideToolBar(true)
       .hideBackButton(true)
       .titleMode(NavigationTitleMode.Mini)
+
+      if (this.showUndoSnackbar) {
+        Row() {
+          Text($r('app.string.undo_delete_msg'))
+            .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+            .fontColor(Color.White)
+            .layoutWeight(1)
+          Button($r('app.string.undo_action'))
+            .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+            .fontColor('#4DA6FF')
+            .backgroundColor(Color.Transparent)
+            .height(32)
+            .onClick(() => {
+              this.handleUndoDelete();
+            })
+        }
+        .width('90%')
+        .padding({
+          left: 16,
+          right: 16,
+          top: 12,
+          bottom: 12
+        })
+        .backgroundColor('#CC333333')
+        .borderRadius(8)
+        .position({ x: '5%', y: '88%' })
+        .transition(TransitionEffect.OPACITY.animation({ duration: 300 }))
+      }
 
       if (this.showInfoDialog) {
         Column() {

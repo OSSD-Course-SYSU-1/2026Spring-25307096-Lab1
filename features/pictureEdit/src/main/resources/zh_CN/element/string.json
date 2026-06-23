@@ -55,6 +55,34 @@
     {
       "name": "subtitle_infomation",
       "value": "下午04:00 呼和浩特市"
+    },
+    {
+      "name": "ToolsAndName5",
+      "value": "AI修图"
+    },
+    {
+      "name": "AiPresetName1",
+      "value": "一键增强"
+    },
+    {
+      "name": "AiPresetName2",
+      "value": "人像美化"
+    },
+    {
+      "name": "AiPresetName3",
+      "value": "风景优化"
+    },
+    {
+      "name": "AiPresetDesc1",
+      "value": "自动优化亮度对比度"
+    },
+    {
+      "name": "AiPresetDesc2",
+      "value": "暖色柔化肤质"
+    },
+    {
+      "name": "AiPresetDesc3",
+      "value": "增强绿色与蓝色"
     }
   ]
 }

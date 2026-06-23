@@ -9,6 +9,12 @@ interface DeleteResult {
   favorites: number[];
 }
 
+export interface DeletedSnapshot {
+  picture: Resource;
+  index: number;
+  favorites: number[];
+}
+
 export class FavoritesStore {
   static load(ctx: common.BaseContext): Promise<number[]> {
     return preferences.getPreferences(ctx, STORE_NAME).then((prefs) => {
@@ -24,6 +30,9 @@ export class FavoritesStore {
         }
         return result;
       });
+    }).catch((err: Error) => {
+      console.error('FavoritesStore.load failed: ' + err.message);
+      return [];
     });
   }
 
@@ -32,6 +41,8 @@ export class FavoritesStore {
       prefs.put(KEY_INDICES, JSON.stringify(favorites)).then(() => {
         prefs.flush();
       });
+    }).catch((err: Error) => {
+      console.error('FavoritesStore.save failed: ' + err.message);
     });
   }
 

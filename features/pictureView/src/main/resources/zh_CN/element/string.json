@@ -47,6 +47,14 @@
     {
       "name": "subtitle_infomation",
       "value": "54张图片"
+    },
+    {
+      "name": "undo_delete_msg",
+      "value": "已删除 1 张图片"
+    },
+    {
+      "name": "undo_action",
+      "value": "撤销"
     }
   ]
 }

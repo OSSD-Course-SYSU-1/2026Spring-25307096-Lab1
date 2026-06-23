@@ -15,6 +15,7 @@
 
 import { BaseConstants, BreakpointConstants } from 'base';
 import PictureEditConstants from '../constants/PictureEditConstants';
+import { AiPreset } from '../viewmodel/AdaptiveViewModel';
 import { deviceInfo } from '@kit.BasicServicesKit';
 
 interface ToolsAndName {
@@ -34,6 +35,11 @@ export struct PictureEdit {
   @State outSetValueOne: number = 40;
   @State windowDirection: boolean = true;
   @State pictureWidth: string = BaseConstants.FULL_WIDTH;
+  @State selectedTool: number = -1;
+  @State activeColorFilter: number[] = [1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0];
   @Consume('pageInfos') pageInfos: NavPathStack;
 
   isColumnLayout(bp: string, direction: Boolean): Boolean {
@@ -59,6 +65,7 @@ export struct PictureEdit {
       Image($r('app.media.ic_public_back'))
         .width(BaseConstants.DEFAULT_ICON_SIZE)
         .height(BaseConstants.DEFAULT_ICON_SIZE)
+        .fillColor(Color.White)
         .onClick(() => {
           this.pageInfos.pop();
         })
@@ -75,6 +82,7 @@ export struct PictureEdit {
         Image(this.windowDirection ? $r('app.media.change2') : $r('app.media.change'))
           .width(BaseConstants.DEFAULT_ICON_SIZE)
           .height(BaseConstants.DEFAULT_ICON_SIZE)
+          .fillColor(Color.White)
           .margin({ right: $r('app.float.image_right') })
           .onClick(() => {
             this.windowDirection = !this.windowDirection;
@@ -83,15 +91,18 @@ export struct PictureEdit {
       Image($r('app.media.ic_add_2'))
         .width(BaseConstants.DEFAULT_ICON_SIZE)
         .height(BaseConstants.DEFAULT_ICON_SIZE)
+        .fillColor(Color.White)
         .margin({ right: $r('app.float.image_right') })
       Image($r('app.media.ic_add_3'))
         .width(BaseConstants.DEFAULT_ICON_SIZE)
         .height(BaseConstants.DEFAULT_ICON_SIZE)
+        .fillColor(Color.White)
         .margin({ right: $r('app.float.image_right') })
 
       Image($r('app.media.ic_add_4'))
         .width(BaseConstants.DEFAULT_ICON_SIZE)
         .height(BaseConstants.DEFAULT_ICON_SIZE)
+        .fillColor(Color.White)
         .margin({ right: $r('app.float.image_right') })
 
     }
@@ -108,8 +119,10 @@ export struct PictureEdit {
         .interpolation(ImageInterpolation.High)
         .objectFit(ImageFit.Cover)
         .autoResize(true)
+        .colorFilter(this.activeColorFilter)
         .height(PictureEditConstants.PICTURE_HEIGHT)
         .width(this.pictureWidth)
+        .constraintSize({ maxWidth: deviceInfo.deviceType === BaseConstants.DEVICE_2IN1 ? 900 : undefined })
     }
   }
 
@@ -123,7 +136,11 @@ export struct PictureEdit {
       }
       .flexBasis(PictureEditConstants.SLIDER_FLEX_BASIS)
 
-      this.filterWindows()
+      if (this.selectedTool === 4) {
+        this.aiPanel()
+      } else {
+        this.filterWindows()
+      }
       Flex({ justifyContent: FlexAlign.Center }) {
         this.bottomBar()
       }
@@ -189,20 +206,77 @@ export struct PictureEdit {
       direction: this.isColumnLayout(this.currentBp, this.windowDirection) ? FlexDirection.Row : FlexDirection.Column,
     }) {
 
-      ForEach(PictureEditConstants.toolsAndName, (item: ToolsAndName) => {
+      ForEach(PictureEditConstants.toolsAndName, (item: ToolsAndName, toolIndex: number) => {
         Column() {
           Image(item.pic)
             .height(BaseConstants.DEFAULT_ICON_SIZE)
             .autoResize(true)
             .aspectRatio(1)
             .margin({ bottom: $r('app.float.image_margin') })
+            .fillColor(this.selectedTool === toolIndex ? '#4DA6FF' : '')
           Text(item.pic_name)
             .fontSize(BaseConstants.FONT_SIZE_TEN)
-            .fontColor($r('app.color.text_color'))
+            .fontColor(this.selectedTool === toolIndex ? '#4DA6FF' : $r('app.color.text_color'))
         }
-      }, (item: ToolsAndName) => JSON.stringify(item)
+        .onClick(() => {
+          if (this.selectedTool === toolIndex) {
+            this.selectedTool = -1;
+          } else {
+            this.selectedTool = toolIndex;
+          }
+        })
+      }, (item: ToolsAndName, toolIndex: number) => toolIndex.toString()
       )
     }
+  }
+
+  applyAiPreset(preset: AiPreset): void {
+    this.outSetValueOne = preset.sliderValue;
+    this.activeColorFilter = [...preset.colorFilter];
+  }
+
+  @Builder
+  aiPanel() {
+    Column({ space: 12 }) {
+      Text($r('app.string.ToolsAndName5'))
+        .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+        .fontColor(Color.White)
+        .fontWeight(BaseConstants.FONT_WEIGHT_FIVE)
+        .width(BaseConstants.FULL_WIDTH)
+        .padding({ left: 12 })
+      ForEach(PictureEditConstants.aiPresets, (preset: AiPreset, index: number) => {
+        Row() {
+          Column() {
+            Text(preset.name)
+              .fontSize(BaseConstants.FONT_SIZE_FOURTEEN)
+              .fontColor(Color.White)
+              .fontWeight(BaseConstants.FONT_WEIGHT_FIVE)
+            Text(preset.desc)
+              .fontSize(BaseConstants.FONT_SIZE_TEN)
+              .fontColor('#99000000')
+              .margin({ top: 4 })
+          }
+          .alignItems(HorizontalAlign.Start)
+          .layoutWeight(1)
+          .padding({ left: 12, right: 12 })
+          Button($r('app.string.edit'))
+            .fontSize(BaseConstants.FONT_SIZE_TEN)
+            .height(28)
+            .backgroundColor('#4DA6FF')
+            .borderRadius(14)
+            .onClick(() => {
+              this.applyAiPreset(preset);
+            })
+        }
+        .width('100%')
+        .height(56)
+        .backgroundColor('#33FFFFFF')
+        .borderRadius(8)
+        .padding({ left: 8, right: 8 })
+      }, (preset: AiPreset, index: number) => index.toString())
+    }
+    .width(BaseConstants.FULL_WIDTH)
+    .padding({ left: 12, right: 12, top: 8, bottom: 8 })
   }
 
   build() {

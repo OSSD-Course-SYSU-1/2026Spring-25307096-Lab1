@@ -47,6 +47,14 @@
     {
       "name": "subtitle_infomation",
       "value": "54 pictures"
+    },
+    {
+      "name": "undo_delete_msg",
+      "value": "1 picture deleted"
+    },
+    {
+      "name": "undo_action",
+      "value": "Undo"
     }
   ]
 }

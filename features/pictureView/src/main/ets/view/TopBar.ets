@@ -14,7 +14,6 @@
  */
 
 import { BaseConstants, BreakpointConstants } from 'base';
-import PictureViewConstants, { ActionInterface } from '../constants/PictureViewConstants';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 
@@ -30,6 +29,14 @@ export struct TopBar {
 
   isFavorited(): boolean {
     return this.favoritedIndices.indexOf(this.curImageIndex) !== -1;
+  }
+
+  getActionColor(index: number): string {
+    if (index === 1) {
+      return this.isFavorited() ? '#FF4444' : '#999999';
+    }
+    const colors: string[] = ['#4DA6FF', '', '#4CAF50', '#FF5252', '#999999'];
+    return colors[index];
   }
 
   build() {
@@ -77,35 +84,6 @@ export struct TopBar {
               .onClick(() => {
                 AppStorage.setOrCreate<boolean>('show_info_dialog', true);
               })
-            if (this.currentBp === BreakpointConstants.BREAKPOINT_LG) {
-              ForEach(PictureViewConstants.ACTIONS, (item: ActionInterface, index: number) => {
-                Image(item.icon)
-                  .height(BaseConstants.DEFAULT_ICON_SIZE)
-                  .width(BaseConstants.DEFAULT_ICON_SIZE)
-                  .fillColor(this.isFavorited() && index === 1 ? '#FF4444' : '')
-                  .margin({ left: $r('app.float.detail_image_left') })
-                  .onClick(() => {
-                    try {
-                      if (index === 1) {
-                        AppStorage.setOrCreate<number>('fav_toggle_idx', this.curImageIndex);
-                        return;
-                      }
-                      if (index === 3) {
-                        AppStorage.setOrCreate<number>('delete_idx', this.curImageIndex);
-                        return;
-                      }
-                      let pushPath = this.getUIContext()
-                        .getHostContext()?.resourceManager.getStringSync((item.icon_name as Resource).id) as string;
-                      if (pushPath === '编辑' || pushPath === 'edit') {
-                        this.pageInfos.pushPath(new NavPathInfo('pictureEdit', []));
-                      }
-                    } catch (error) {
-                      let err = error as BusinessError;
-                      hilog.error(0x0000, 'TopBar', 'error code is ' + err.code);
-                    }
-                  })
-              }, (_item: ActionInterface, idx: number) => idx.toString())
-            }
           }
         }
       }

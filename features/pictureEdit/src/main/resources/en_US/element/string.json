@@ -55,6 +55,34 @@
     {
       "name": "subtitle_infomation",
       "value": "4:00 PM, Hohhot"
+    },
+    {
+      "name": "ToolsAndName5",
+      "value": "AI"
+    },
+    {
+      "name": "AiPresetName1",
+      "value": "Enhance"
+    },
+    {
+      "name": "AiPresetName2",
+      "value": "Portrait"
+    },
+    {
+      "name": "AiPresetName3",
+      "value": "Scenery"
+    },
+    {
+      "name": "AiPresetDesc1",
+      "value": "Auto optimize"
+    },
+    {
+      "name": "AiPresetDesc2",
+      "value": "Skin smooth"
+    },
+    {
+      "name": "AiPresetDesc3",
+      "value": "Landscape boost"
     }
   ]
 }

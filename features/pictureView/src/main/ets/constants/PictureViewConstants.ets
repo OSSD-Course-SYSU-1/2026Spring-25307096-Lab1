@@ -44,10 +44,10 @@ export default class PictureViewConstants {
       icon: $r('app.media.ic_public_favor'), icon_name: $r('app.string.ActionInterface2')
     },
     {
-      icon: $r("app.media.ic_gallery_public_details_4"), icon_name: $r('app.string.ActionInterface3')
+      icon: $r("app.media.ic_public_edit"), icon_name: $r('app.string.ActionInterface3')
     },
     {
-      icon: $r("app.media.ic_gallery_public_details_5"), icon_name: $r('app.string.ActionInterface4')
+      icon: $r("app.media.ic_public_delete"), icon_name: $r('app.string.ActionInterface4')
     },
     {
       icon: $r('app.media.ic_public_more'), icon_name: $r('app.string.ActionInterface5')

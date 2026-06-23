@@ -22,6 +22,7 @@ export struct PreviewLists {
   @StorageLink('currentBreakpoint') currentBp: string = BreakpointConstants.BREAKPOINT_MD;
   @Consume('pictureList') pictureList: Resource[];
   @Consume('curImageIndex') curImageIndex: number;
+  @Prop isVertical: boolean = false;
   private scroller: Scroller = new Scroller();
 
   aboutToAppear(): void {
@@ -33,8 +34,9 @@ export struct PreviewLists {
       ForEach(this.pictureList, (item: Resource, index: number) => {
         ListItem() {
           Image(item)
-            .height($r('app.float.list_image_height'))
-            .aspectRatio(IMAGE_ASPECT_RATIO)
+            .height(this.isVertical ? 72 : $r('app.float.list_image_height'))
+            .width(this.isVertical ? 72 : undefined)
+            .aspectRatio(this.isVertical ? undefined : IMAGE_ASPECT_RATIO)
             .autoResize(true)
             .margin({ left: $r('app.float.list_image_margin_left') })
             .border({
@@ -49,12 +51,15 @@ export struct PreviewLists {
         }
       }, (_item: Resource, index: number) => index.toString())
     }
-    .height($r('app.float.list_image_height'))
+    .height(this.isVertical ? '100%' : $r('app.float.list_image_height'))
+    .width(this.isVertical ? '100%' : '100%')
     .padding({
       top: $r('app.float.list_margin_top'),
-      bottom: $r('app.float.list_margin_bottom')
+      bottom: $r('app.float.list_margin_bottom'),
+      left: this.isVertical ? 12 : 0,
+      right: this.isVertical ? 12 : 0
     })
-    .listDirection(Axis.Horizontal)
+    .listDirection(this.isVertical ? Axis.Vertical : Axis.Horizontal)
     .scrollSnapAlign(ScrollSnapAlign.CENTER)
     .scrollBar(BarState.Off)
   }

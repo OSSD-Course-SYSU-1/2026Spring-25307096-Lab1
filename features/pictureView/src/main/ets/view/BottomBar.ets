@@ -29,44 +29,77 @@ export struct BottomBar {
     return this.favoritedIndices.indexOf(this.curImageIndex) !== -1;
   }
 
+  getActionColor(index: number): string {
+    if (index === 1) {
+      return this.isFavorited() ? '#FF4444' : '#999999';
+    }
+    const colors: string[] = ['#4DA6FF', '', '#4CAF50', '#FF5252', '#999999'];
+    return colors[index];
+  }
+
   build() {
     Flex({
       justifyContent: FlexAlign.Center,
       direction: FlexDirection.Row
     }) {
       ForEach(PictureViewConstants.ACTIONS, (item: ActionInterface, index: number) => {
-        Column() {
-          Image(item.icon)
-            .height(BaseConstants.DEFAULT_ICON_SIZE)
-            .width(BaseConstants.DEFAULT_ICON_SIZE)
-            .fillColor(this.isFavorited() && index === 1 ? '#FF4444' : '')
-          Text(this.isFavorited() && index === 1 ? $r('app.string.favorited') : item.icon_name)
-            .fontFamily(BaseConstants.FONT_FAMILY_NORMAL)
-            .fontSize(BaseConstants.FONT_SIZE_TEN)
-            .fontWeight(BaseConstants.FONT_WEIGHT_FOUR)
-            .padding({ top: $r('app.float.icon_padding_top') })
-        }
-        .onClick(() => {
-          try {
-            if (index === 1) {
-              AppStorage.setOrCreate<number>('fav_toggle_idx', this.curImageIndex);
-              return;
-            }
-            if (index === 3) {
-              AppStorage.setOrCreate<number>('delete_idx', this.curImageIndex);
-              return;
-            }
-            let pushPath = this.getUIContext()
-              .getHostContext()?.resourceManager.getStringSync((item.icon_name as Resource).id) as string;
-            if (pushPath === '编辑' || pushPath === 'edit') {
-              this.pageInfos.pushPath(new NavPathInfo('pictureEdit', []));
-            }
-          } catch (error) {
-            let err = error as BusinessError;
-            hilog.error(0x0000, 'BottomBar', 'error code is ' + err.code);
+        if (index === 2) {
+          Column() {
+            Image(item.icon)
+              .height(BaseConstants.DEFAULT_ICON_SIZE)
+              .width(BaseConstants.DEFAULT_ICON_SIZE)
+              .fillColor(this.getActionColor(index))
+            Text(item.icon_name)
+              .fontFamily(BaseConstants.FONT_FAMILY_NORMAL)
+              .fontSize(BaseConstants.FONT_SIZE_TEN)
+              .fontWeight(BaseConstants.FONT_WEIGHT_FOUR)
+              .padding({ top: $r('app.float.icon_padding_top') })
           }
-        })
-        .width(PictureViewConstants.ICON_LIST_WIDTH)
+          .width(PictureViewConstants.ICON_LIST_WIDTH)
+          .onClick(() => {
+            this.pageInfos.pushPath(new NavPathInfo('pictureEdit', []));
+          })
+        } else if (index === 3) {
+          Column() {
+            Image(item.icon)
+              .height(BaseConstants.DEFAULT_ICON_SIZE)
+              .width(BaseConstants.DEFAULT_ICON_SIZE)
+              .fillColor(this.getActionColor(index))
+            Text(item.icon_name)
+              .fontFamily(BaseConstants.FONT_FAMILY_NORMAL)
+              .fontSize(BaseConstants.FONT_SIZE_TEN)
+              .fontWeight(BaseConstants.FONT_WEIGHT_FOUR)
+              .padding({ top: $r('app.float.icon_padding_top') })
+          }
+          .width(PictureViewConstants.ICON_LIST_WIDTH)
+          .onClick(() => {
+            AppStorage.setOrCreate<number>('delete_idx', this.curImageIndex);
+          })
+        } else {
+          Column() {
+            Image(item.icon)
+              .height(BaseConstants.DEFAULT_ICON_SIZE)
+              .width(BaseConstants.DEFAULT_ICON_SIZE)
+              .fillColor(this.getActionColor(index))
+            Text(this.isFavorited() && index === 1 ? $r('app.string.favorited') : item.icon_name)
+              .fontFamily(BaseConstants.FONT_FAMILY_NORMAL)
+              .fontSize(BaseConstants.FONT_SIZE_TEN)
+              .fontWeight(BaseConstants.FONT_WEIGHT_FOUR)
+              .padding({ top: $r('app.float.icon_padding_top') })
+          }
+          .width(PictureViewConstants.ICON_LIST_WIDTH)
+          .onClick(() => {
+            try {
+              if (index === 1) {
+                AppStorage.setOrCreate<number>('fav_toggle_idx', this.curImageIndex);
+                return;
+              }
+            } catch (error) {
+              let err = error as BusinessError;
+              hilog.error(0x0000, 'BottomBar', 'error code is ' + err.code);
+            }
+          })
+        }
       }, (_item: ActionInterface, idx: number) => idx.toString())
     }
     .height($r('app.float.icon_list_height'))

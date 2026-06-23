@@ -10,6 +10,9 @@ oh_modules/
 .DS_Store
 Thumbs.db
 
+# IDE preview cache
+**/.preview/
+
 # Env files
 .env
 *.log

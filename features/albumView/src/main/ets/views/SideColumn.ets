@@ -283,5 +283,6 @@ export function SideColumn(){
       top: $r('app.float.row_padding_top')
     })
   }
-  .width($r('app.float.side_width'))
+  .width('25%')
+  .constraintSize({ minWidth: 240, maxWidth: 360 })
 }

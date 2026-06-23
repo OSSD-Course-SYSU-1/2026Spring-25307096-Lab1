@@ -42,3 +42,10 @@ export interface PicAndName {
   pic_name: ResourceStr
   color_filter: number[]
 }
+
+export interface AiPreset {
+  name: ResourceStr;
+  desc: ResourceStr;
+  sliderValue: number;
+  colorFilter: number[];
+}
