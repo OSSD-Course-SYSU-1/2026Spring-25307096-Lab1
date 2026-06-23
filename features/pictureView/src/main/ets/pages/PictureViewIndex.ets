@@ -176,7 +176,7 @@ export struct PictureViewIndex {
         Flex({ direction: FlexDirection.Column }) {
           TopBar()
           if (this.currentBp === BreakpointConstants.BREAKPOINT_LG) {
-            Flex({ direction: FlexDirection.Row }) {
+            Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center }) {
               CenterPart()
                 .layoutWeight(3)
               Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center }) {
@@ -223,7 +223,6 @@ export struct PictureViewIndex {
               .padding({ left: 12 })
             }
             .flexGrow(1)
-            .alignItems(VerticalAlign.Center)
           } else {
             Flex({
               direction: FlexDirection.Column,
