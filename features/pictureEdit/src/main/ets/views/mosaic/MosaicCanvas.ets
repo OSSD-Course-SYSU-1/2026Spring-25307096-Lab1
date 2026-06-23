@@ -28,7 +28,7 @@ export struct MosaicCanvas {
   @Prop mosaicSize: number;   // 4-20
   @Prop canvasWidth: number;  // actual image display width in vp
   @Prop canvasHeight: number; // actual image display height in vp
-  @Prop enabled: boolean;     // only active when mosaic tool selected
+  @Prop isEnabled: boolean;     // only active when mosaic tool selected
 
   private settings: RenderingContextSettings = new RenderingContextSettings(true);
   private ctx: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);
@@ -109,12 +109,12 @@ export struct MosaicCanvas {
       .width(this.canvasWidth)
       .height(this.canvasHeight)
       .position({ x: 0, y: 0 })
-      .hitTestBehavior(this.enabled ? HitTestMode.Default : HitTestMode.None)
+      .hitTestBehavior(this.isEnabled ? HitTestMode.Default : HitTestMode.None)
       .onReady(() => {
         this.redrawAll();
       })
       .onTouch((event: TouchEvent) => {
-        if (!this.enabled) return;
+        if (!this.isEnabled) return;
 
         const touch: TouchObject = event.touches[0];
         const x: number = touch.x;

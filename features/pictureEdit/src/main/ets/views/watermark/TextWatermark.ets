@@ -26,7 +26,7 @@ export struct TextWatermark {
   @State inputText: string = '';
   @State selectedColor: number = 0;       // index into TEXT_COLORS
   @State fontSize: number = 24;
-  @State opacity: number = 0.8;
+  @State textOpacity: number = 0.8;
   @Link selectedTab: number;              // 0 = text, 1 = sticker
   onAddText?: (text: string, color: string, fontSize: number, opacity: number) => void;
 
@@ -112,13 +112,13 @@ export struct TextWatermark {
           .fontSize(BaseConstants.FONT_SIZE_TEN)
           .fontColor('#99FFFFFF')
           .width(40)
-        Slider({ value: this.opacity, min: 0.2, max: 1.0, style: SliderStyle.OutSet })
+        Slider({ value: this.textOpacity, min: 0.2, max: 1.0, style: SliderStyle.OutSet })
           .blockColor('#4DA6FF')
           .selectedColor('#4DA6FF')
           .trackColor('#33FFFFFF')
-          .onChange((value: number) => { this.opacity = value; })
+          .onChange((value: number) => { this.textOpacity = value; })
           .layoutWeight(1)
-        Text(Math.round(this.opacity * 100).toString() + '%')
+        Text(Math.round(this.textOpacity * 100).toString() + '%')
           .fontSize(BaseConstants.FONT_SIZE_TEN)
           .fontColor('#99FFFFFF')
           .width(36)
@@ -139,7 +139,7 @@ export struct TextWatermark {
               this.inputText.trim(),
               PictureEditConstants.TEXT_COLORS[this.selectedColor],
               this.fontSize,
-              this.opacity
+              this.textOpacity
             );
             this.inputText = '';
           }

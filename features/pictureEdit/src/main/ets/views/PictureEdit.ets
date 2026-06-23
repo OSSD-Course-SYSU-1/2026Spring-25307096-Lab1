@@ -15,8 +15,15 @@
 
 import { BaseConstants, BreakpointConstants } from 'base';
 import PictureEditConstants from '../constants/PictureEditConstants';
-import { AiPreset, ColorMatrix } from '../viewmodel/AdaptiveViewModel';
+import {
+  AiPreset, ColorMatrix, OverlayItem, TextOverlay,
+  StickerOverlay, MosaicRegion
+} from '../viewmodel/AdaptiveViewModel';
 import { deviceInfo } from '@kit.BasicServicesKit';
+import { TextWatermark } from './watermark/TextWatermark';
+import { StickerPanel } from './watermark/StickerPanel';
+import { MosaicPanel } from './mosaic/MosaicPanel';
+import { MosaicCanvas } from './mosaic/MosaicCanvas';
 
 interface ToolsAndName {
   pic: Resource
@@ -43,6 +50,18 @@ export struct PictureEdit {
   @State activePresetIndex: number = -1;
   @State aiIntensity: number = 50;
   @State showOriginal: boolean = false;
+
+  /* ---------- Text / Sticker overlay state ---------- */
+  @State overlays: OverlayItem[] = [];
+  @State selectedStickerTab: number = 0;           // 0=text, 1=sticker
+  @State activeOverlayId: string = '';
+
+  /* ---------- Mosaic state ---------- */
+  @State mosaicRegions: MosaicRegion[] = [];
+  @State mosaicBrushMode: number = 0;              // 0=brush, 1=box
+  @State mosaicEffectType: number = 0;             // 0=mosaic, 1=blur
+  @State mosaicBrushSize: number = 30;
+  @State mosaicGrainSize: number = 8;
 
   isColumnLayout(bp: string, direction: Boolean): Boolean {
     if (bp === BreakpointConstants.BREAKPOINT_SM) {
@@ -122,7 +141,8 @@ export struct PictureEdit {
    * ================================================================= */
   @Builder
   centerPicture() {
-    Flex({ justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
+    Stack() {
+      /* Layer 0: Main image */
       Image($r("app.media.photo"))
         .interpolation(ImageInterpolation.High)
         .objectFit(ImageFit.Cover)
@@ -142,7 +162,103 @@ export struct PictureEdit {
               this.showOriginal = false;
             })
         )
+
+      /* Layer 1: Mosaic/blur canvas */
+      if (this.selectedTool === 6 || this.mosaicRegions.length > 0) {
+        MosaicCanvas({
+          regions: $mosaicRegions,
+          brushMode: this.mosaicBrushMode,
+          effectType: this.mosaicEffectType,
+          brushSize: this.mosaicBrushSize,
+          mosaicSize: this.mosaicGrainSize,
+          canvasWidth: 360,
+          canvasHeight: 360,
+          isEnabled: this.selectedTool === 6
+        })
+          .width(this.pictureWidth)
+          .height(PictureEditConstants.PICTURE_HEIGHT)
+      }
+
+      /* Layer 2: Text / sticker overlays */
+      ForEach(this.overlays, (item: OverlayItem, index: number) => {
+        if (item.type === 'text') {
+          this.textOverlayItem(item as TextOverlay)
+        } else {
+          this.stickerOverlayItem(item as StickerOverlay)
+        }
+      }, (item: OverlayItem) => item.id)
     }
+  }
+
+  @Builder
+  textOverlayItem(item: TextOverlay) {
+    Text(item.text)
+      .fontSize(item.fontSize)
+      .fontColor(item.color)
+      .opacity(item.opacity)
+      .rotate({ angle: item.rotation })
+      .scale({ x: item.scale, y: item.scale })
+      .position({ x: item.x * 360, y: item.y * 360 })
+      .border({
+        width: this.activeOverlayId === item.id ? 1 : 0,
+        color: '#4DA6FF',
+        style: BorderStyle.Dashed
+      })
+      .gesture(
+        GestureGroup(GestureMode.Parallel,
+          PanGesture({ fingers: 1 })
+            .onActionUpdate((event: GestureEvent) => {
+              item.x = Math.max(0, Math.min(1, item.x + event.offsetX / 360));
+              item.y = Math.max(0, Math.min(1, item.y + event.offsetY / 360));
+            }),
+          PinchGesture({ fingers: 2 })
+            .onActionUpdate((event: GestureEvent) => {
+              item.scale = Math.max(0.5, Math.min(3.0, item.scale * event.scale));
+            }),
+          RotationGesture()
+            .onActionUpdate((event: GestureEvent) => {
+              item.rotation = (item.rotation + event.angle) % 360;
+            })
+        )
+      )
+      .onClick(() => {
+        this.activeOverlayId = this.activeOverlayId === item.id ? '' : item.id;
+      })
+  }
+
+  @Builder
+  stickerOverlayItem(item: StickerOverlay) {
+    Text(item.emoji)
+      .fontSize(36)
+      .opacity(item.opacity)
+      .rotate({ angle: item.rotation })
+      .scale({ x: item.scale, y: item.scale })
+      .position({ x: item.x * 360, y: item.y * 360 })
+      .border({
+        width: this.activeOverlayId === item.id ? 1 : 0,
+        color: '#4DA6FF',
+        style: BorderStyle.Dashed
+      })
+      .gesture(
+        GestureGroup(GestureMode.Parallel,
+          PanGesture({ fingers: 1 })
+            .onActionUpdate((event: GestureEvent) => {
+              item.x = Math.max(0, Math.min(1, item.x + event.offsetX / 360));
+              item.y = Math.max(0, Math.min(1, item.y + event.offsetY / 360));
+            }),
+          PinchGesture({ fingers: 2 })
+            .onActionUpdate((event: GestureEvent) => {
+              item.scale = Math.max(0.5, Math.min(3.0, item.scale * event.scale));
+            }),
+          RotationGesture()
+            .onActionUpdate((event: GestureEvent) => {
+              item.rotation = (item.rotation + event.angle) % 360;
+            })
+        )
+      )
+      .onClick(() => {
+        this.activeOverlayId = this.activeOverlayId === item.id ? '' : item.id;
+      })
   }
 
   /* =================================================================
@@ -160,6 +276,10 @@ export struct PictureEdit {
 
       if (this.selectedTool === 4) {
         this.aiPanel()
+      } else if (this.selectedTool === 5) {
+        this.textWatermarkPanel()
+      } else if (this.selectedTool === 6) {
+        this.mosaicPanel()
       } else {
         this.filterWindows()
       }
@@ -245,41 +365,45 @@ export struct PictureEdit {
    * ================================================================= */
   @Builder
   bottomBar() {
-    Flex({
-      justifyContent: this.isColumnLayout(this.currentBp, this.windowDirection) ? FlexAlign.SpaceAround :
-      FlexAlign.SpaceAround,
-      alignItems: ItemAlign.Center,
-      direction: this.isColumnLayout(this.currentBp, this.windowDirection) ? FlexDirection.Row : FlexDirection.Column,
-    }) {
-
-      ForEach(PictureEditConstants.toolsAndName, (item: ToolsAndName, toolIndex: number) => {
-        Column() {
-          Image(item.pic)
-            .height(BaseConstants.DEFAULT_ICON_SIZE)
-            .autoResize(true)
-            .aspectRatio(1)
-            .margin({ bottom: $r('app.float.image_margin') })
-            .fillColor(this.selectedTool === toolIndex ? '#4DA6FF' : '')
-          Text(item.pic_name)
-            .fontSize(BaseConstants.FONT_SIZE_TEN)
-            .fontColor(this.selectedTool === toolIndex ? '#4DA6FF' : $r('app.color.text_color'))
-        }
-        .onClick(() => {
-          if (this.selectedTool === toolIndex) {
-            // Deselect
-            this.selectedTool = -1;
-            this.activePresetIndex = -1;
-            this.activeColorFilter = [...PictureEditConstants.IDENTITY];
-          } else {
-            this.selectedTool = toolIndex;
-            if (toolIndex !== 4) {
-              this.activePresetIndex = -1;
-            }
+    Scroll() {
+      Flex({
+        justifyContent: FlexAlign.SpaceAround,
+        alignItems: ItemAlign.Center,
+        direction: this.isColumnLayout(this.currentBp, this.windowDirection)
+          ? FlexDirection.Row : FlexDirection.Column,
+      }) {
+        ForEach(PictureEditConstants.toolsAndName, (item: ToolsAndName, toolIndex: number) => {
+          Column() {
+            Image(item.pic)
+              .height(BaseConstants.DEFAULT_ICON_SIZE)
+              .autoResize(true)
+              .aspectRatio(1)
+              .margin({ bottom: $r('app.float.image_margin') })
+              .fillColor(this.selectedTool === toolIndex ? '#4DA6FF' : '')
+            Text(item.pic_name)
+              .fontSize(BaseConstants.FONT_SIZE_TEN)
+              .fontColor(this.selectedTool === toolIndex ? '#4DA6FF' : $r('app.color.text_color'))
           }
-        })
-      }, (item: ToolsAndName, toolIndex: number) => toolIndex.toString()
-      )
+          .padding({ left: 6, right: 6 })
+          .onClick(() => {
+            if (this.selectedTool === toolIndex) {
+              // Deselect
+              this.selectedTool = -1;
+              this.activePresetIndex = -1;
+              this.activeColorFilter = [...PictureEditConstants.IDENTITY];
+            } else {
+              this.selectedTool = toolIndex;
+              if (toolIndex !== 4) {
+                this.activePresetIndex = -1;
+              }
+            }
+          })
+        }, (item: ToolsAndName, toolIndex: number) => toolIndex.toString())
+      }
     }
+    .scrollable(ScrollDirection.Horizontal)
+    .scrollBar(BarState.Off)
+    .width('100%')
   }
 
   /* =================================================================
@@ -396,6 +520,84 @@ export struct PictureEdit {
     }
     .width(BaseConstants.FULL_WIDTH)
     .padding({ left: 12, right: 12, top: 8, bottom: 8 })
+  }
+
+  /* =================================================================
+   *  Text Watermark / Sticker Panel
+   * ================================================================= */
+  @Builder
+  textWatermarkPanel() {
+    Column({ space: 0 }) {
+      TextWatermark({
+        selectedTab: $selectedStickerTab,
+        onAddText: (text: string, color: string, fontSize: number, opacity: number) => {
+          const overlay: TextOverlay = {
+            id: Date.now().toString() + '_text',
+            type: 'text',
+            text: text,
+            x: 0.5,
+            y: 0.5,
+            fontSize: fontSize,
+            color: color,
+            opacity: opacity,
+            rotation: 0,
+            scale: 1.0
+          };
+          this.overlays.push(overlay);
+          this.overlays = [...this.overlays];
+        }
+      })
+
+      if (this.selectedStickerTab === 1) {
+        StickerPanel({
+          onAddSticker: (emoji: string) => {
+            const overlay: StickerOverlay = {
+              id: Date.now().toString() + '_sticker',
+              type: 'sticker',
+              emoji: emoji,
+              x: 0.5,
+              y: 0.5,
+              scale: 1.0,
+              rotation: 0,
+              opacity: 1.0
+            };
+            this.overlays.push(overlay);
+            this.overlays = [...this.overlays];
+          }
+        })
+      }
+    }
+    .width('100%')
+  }
+
+  /* =================================================================
+   *  Mosaic Panel
+   * ================================================================= */
+  @Builder
+  mosaicPanel() {
+    MosaicPanel({
+      brushMode: $mosaicBrushMode,
+      effectType: $mosaicEffectType,
+      brushSize: $mosaicBrushSize,
+      mosaicSize: $mosaicGrainSize,
+      onUndo: () => {
+        if (this.mosaicRegions.length > 0) {
+          this.mosaicRegions.pop();
+          this.mosaicRegions = [...this.mosaicRegions];
+        }
+      },
+      onClear: () => {
+        this.mosaicRegions = [];
+      }
+    })
+  }
+
+  /* ---- Delete active overlay helper ---- */
+  deleteActiveOverlay(): void {
+    if (this.activeOverlayId) {
+      this.overlays = this.overlays.filter((o: OverlayItem) => o.id !== this.activeOverlayId);
+      this.activeOverlayId = '';
+    }
   }
 
   build() {
