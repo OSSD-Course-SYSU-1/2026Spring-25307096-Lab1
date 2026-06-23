@@ -135,6 +135,82 @@
     {
       "name": "ai_apply",
       "value": "应用"
+    },
+    {
+      "name": "ToolsAndName6",
+      "value": "文字"
+    },
+    {
+      "name": "ToolsAndName7",
+      "value": "马赛克"
+    },
+    {
+      "name": "text_watermark_tab",
+      "value": "文字水印"
+    },
+    {
+      "name": "sticker_tab",
+      "value": "贴纸"
+    },
+    {
+      "name": "text_placeholder",
+      "value": "输入文字..."
+    },
+    {
+      "name": "text_add",
+      "value": "添加文字"
+    },
+    {
+      "name": "text_color",
+      "value": "颜色"
+    },
+    {
+      "name": "text_size",
+      "value": "大小"
+    },
+    {
+      "name": "text_opacity",
+      "value": "透明度"
+    },
+    {
+      "name": "mosaic_mode_brush",
+      "value": "涂抹"
+    },
+    {
+      "name": "mosaic_mode_box",
+      "value": "框选"
+    },
+    {
+      "name": "mosaic_effect_mosaic",
+      "value": "马赛克"
+    },
+    {
+      "name": "mosaic_effect_blur",
+      "value": "模糊"
+    },
+    {
+      "name": "mosaic_brush_size",
+      "value": "画笔大小"
+    },
+    {
+      "name": "mosaic_grain",
+      "value": "马赛克粒度"
+    },
+    {
+      "name": "mosaic_undo",
+      "value": "撤销"
+    },
+    {
+      "name": "mosaic_clear",
+      "value": "清空全部"
+    },
+    {
+      "name": "sticker_delete",
+      "value": "删除"
+    },
+    {
+      "name": "sticker_done",
+      "value": "完成"
     }
   ]
 }

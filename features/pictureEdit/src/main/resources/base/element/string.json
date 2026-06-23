@@ -135,6 +135,82 @@
     {
       "name": "ai_apply",
       "value": "Apply"
+    },
+    {
+      "name": "ToolsAndName6",
+      "value": "Text"
+    },
+    {
+      "name": "ToolsAndName7",
+      "value": "Mosaic"
+    },
+    {
+      "name": "text_watermark_tab",
+      "value": "Text"
+    },
+    {
+      "name": "sticker_tab",
+      "value": "Sticker"
+    },
+    {
+      "name": "text_placeholder",
+      "value": "Enter text..."
+    },
+    {
+      "name": "text_add",
+      "value": "Add Text"
+    },
+    {
+      "name": "text_color",
+      "value": "Color"
+    },
+    {
+      "name": "text_size",
+      "value": "Size"
+    },
+    {
+      "name": "text_opacity",
+      "value": "Opacity"
+    },
+    {
+      "name": "mosaic_mode_brush",
+      "value": "Brush"
+    },
+    {
+      "name": "mosaic_mode_box",
+      "value": "Box"
+    },
+    {
+      "name": "mosaic_effect_mosaic",
+      "value": "Mosaic"
+    },
+    {
+      "name": "mosaic_effect_blur",
+      "value": "Blur"
+    },
+    {
+      "name": "mosaic_brush_size",
+      "value": "Brush Size"
+    },
+    {
+      "name": "mosaic_grain",
+      "value": "Grain"
+    },
+    {
+      "name": "mosaic_undo",
+      "value": "Undo"
+    },
+    {
+      "name": "mosaic_clear",
+      "value": "Clear All"
+    },
+    {
+      "name": "sticker_delete",
+      "value": "Delete"
+    },
+    {
+      "name": "sticker_done",
+      "value": "Done"
     }
   ]
 }
