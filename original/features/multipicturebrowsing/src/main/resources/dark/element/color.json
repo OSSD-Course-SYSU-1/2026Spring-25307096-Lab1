@@ -1,0 +1,52 @@
+{
+  "color": [
+    {
+      "name": "album_list_background",
+      "value": "#1F1F1F"
+    },
+    {
+      "name": "browsing_page_background",
+      "value": "#1F1F1F"
+    },
+    {
+      "name": "time_filter_background",
+      "value": "#db000000"
+    },
+    {
+      "name": "time_filter_selected_bg",
+      "value": "#66ffffff"
+    },
+    {
+      "name": "time_filter_selected_text",
+      "value": "#DBFFFFFF"
+    },
+    {
+      "name": "time_filter_unselected_text",
+      "value": "#99ffffff"
+    },
+    {
+      "name": "album_category_icon",
+      "value": "#99ffffff"
+    },
+    {
+      "name": "album_selected_text",
+      "value": "#0A59F7"
+    },
+    {
+      "name": "album_unselected_text",
+      "value": "#E6ffffff"
+    },
+    {
+      "name": "album_selected_bg",
+      "value": "#1A0A59F7"
+    },
+    {
+      "name": "album_divider_color",
+      "value": "#0dffffff"
+    },
+    {
+      "name": "sidebar_button_background",
+      "value": "#0dffffff"
+    }
+  ]
+}

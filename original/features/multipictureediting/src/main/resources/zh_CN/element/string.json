@@ -1,0 +1,56 @@
+{
+  "string": [
+    {
+      "name": "editing_title",
+      "value": "编辑"
+    },
+    {
+      "name": "filter_original",
+      "value": "原片"
+    },
+    {
+      "name": "filter_cyan_orange",
+      "value": "青桔"
+    },
+    {
+      "name": "filter_sunset",
+      "value": "日暮"
+    },
+    {
+      "name": "filter_crystal",
+      "value": "晶莹"
+    },
+    {
+      "name": "filter_antique",
+      "value": "古树"
+    },
+    {
+      "name": "filter_lucky",
+      "value": "小幸运"
+    },
+    {
+      "name": "filter_sweet",
+      "value": "甜系"
+    },
+    {
+      "name": "filter_medium",
+      "value": "中调"
+    },
+    {
+      "name": "filter_milk_tea",
+      "value": "奶茶"
+    },
+    {
+      "name": "compare_button",
+      "value": "对比"
+    },
+    {
+      "name": "small_screen_alert_message",
+      "value": "当前页面操作不便，推荐回大屏使用!"
+    },
+    {
+      "name": "small_screen_alert_confirm",
+      "value": "知道了"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "string": [
+    {
+      "name": "create_album",
+      "value": "新建相册"
+    },
+    {
+      "name": "filter_year",
+      "value": "年"
+    },
+    {
+      "name": "filter_month",
+      "value": "月"
+    },
+    {
+      "name": "filter_day",
+      "value": "日"
+    },
+    {
+      "name": "album_photos_and_videos",
+      "value": "图片和视频"
+    },
+    {
+      "name": "album_photos",
+      "value": "图片"
+    },
+    {
+      "name": "album_videos",
+      "value": "视频"
+    },
+    {
+      "name": "album_favorites",
+      "value": "我的收藏"
+    },
+    {
+      "name": "album_moments",
+      "value": "时刻"
+    },
+    {
+      "name": "album_hidden",
+      "value": "已隐藏"
+    },
+    {
+      "name": "album_recently_deleted",
+      "value": "最近删除"
+    },
+    {
+      "name": "album_new_1",
+      "value": "新建相册1"
+    },
+    {
+      "name": "album_new_2",
+      "value": "新建相册2"
+    },
+    {
+      "name": "album_portrait",
+      "value": "人像相册"
+    },
+    {
+      "name": "category_my_albums",
+      "value": "我的相册"
+    },
+    {
+      "name": "category_smart_albums",
+      "value": "智能相册"
+    },
+    {
+      "name": "title_today",
+      "value": "今天"
+    }
+  ]
+}

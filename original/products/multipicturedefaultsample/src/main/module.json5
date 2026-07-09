@@ -1,0 +1,55 @@
+{
+  "module": {
+    "name": "multipicturedefaultsample",
+    "type": "entry",
+    "description": "$string:module_desc",
+    "mainElement": "MultiPictureBeautificationDefaultAbility",
+    "deviceTypes": [
+      "phone",
+      "tablet"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "routerMap": "$profile:router_map",
+    "abilities": [
+      {
+        "name": "MultiPictureBeautificationDefaultAbility",
+        "srcEntry": "./ets/defaultability/DefaultAbility.ets",
+        "description": "$string:ability_desc",
+        "icon": "$media:layered_image",
+        "label": "$string:ability_label",
+        "orientation": "follow_desktop",
+        "startWindowIcon": "$media:startIcon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true,
+        "minWindowHeight": 480,
+        "minWindowWidth": 360,
+        "skills": [
+          {
+            "entities": [
+              "entity.system.home"
+            ],
+            "actions": [
+              "ohos.want.action.home"
+            ]
+          }
+        ]
+      }
+    ],
+    "extensionAbilities": [
+      {
+        "name": "MultiPictureBeautificationDefaultBackupAbility",
+        "srcEntry": "./ets/defaultbackupability/DefaultBackupAbility.ets",
+        "type": "backup",
+        "exported": false,
+        "metadata": [
+          {
+            "name": "ohos.extension.backup",
+            "resource": "$profile:backup_config"
+          }
+        ],
+      }
+    ]
+  }
+}

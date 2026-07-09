@@ -1,0 +1,44 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "ability_desc",
+      "value": "description"
+    },
+    {
+      "name": "ability_label",
+      "value": "图片美化"
+    },
+    {
+      "name": "tab_photos",
+      "value": "照片"
+    },
+    {
+      "name": "tab_albums",
+      "value": "相册"
+    },
+    {
+      "name": "tab_moments",
+      "value": "时刻"
+    },
+    {
+      "name": "tab_cut",
+      "value": "截取"
+    },
+    {
+      "name": "tab_crop",
+      "value": "裁剪"
+    },
+    {
+      "name": "tab_adjust",
+      "value": "调节"
+    },
+    {
+      "name": "tab_filters",
+      "value": "滤镜"
+    }
+  ]
+}

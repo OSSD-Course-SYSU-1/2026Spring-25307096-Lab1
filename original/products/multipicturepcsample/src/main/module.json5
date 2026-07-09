@@ -1,0 +1,53 @@
+{
+  "module": {
+    "name": "multipicturepcsample",
+    "type": "entry",
+    "description": "$string:module_desc",
+    "mainElement": "MultiPictureBeautificationPcAbility",
+    "deviceTypes": [
+      "2in1"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "routerMap": "$profile:router_map",
+    "abilities": [
+      {
+        "name": "MultiPictureBeautificationPcAbility",
+        "srcEntry": "./ets/pcability/PcAbility.ets",
+        "description": "$string:PcAbility_desc",
+        "icon": "$media:layered_image",
+        "label": "$string:PcAbility_label",
+        "startWindowIcon": "$media:startIcon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true,
+        "minWindowHeight": 500,
+        "minWindowWidth": 1050,
+        "skills": [
+          {
+            "entities": [
+              "entity.system.home"
+            ],
+            "actions": [
+              "ohos.want.action.home"
+            ]
+          }
+        ]
+      }
+    ],
+    "extensionAbilities": [
+      {
+        "name": "MultiPictureBeautificationPcBackupAbility",
+        "srcEntry": "./ets/pcbackupability/PcBackupAbility.ets",
+        "type": "backup",
+        "exported": false,
+        "metadata": [
+          {
+            "name": "ohos.extension.backup",
+            "resource": "$profile:backup_config"
+          }
+        ],
+      }
+    ]
+  }
+}

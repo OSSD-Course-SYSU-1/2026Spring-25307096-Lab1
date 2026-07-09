@@ -1,0 +1,56 @@
+{
+  "string": [
+    {
+      "name": "editing_title",
+      "value": "Edit"
+    },
+    {
+      "name": "filter_original",
+      "value": "Original"
+    },
+    {
+      "name": "filter_cyan_orange",
+      "value": "Cyan Orange"
+    },
+    {
+      "name": "filter_sunset",
+      "value": "Sunset"
+    },
+    {
+      "name": "filter_crystal",
+      "value": "Crystal"
+    },
+    {
+      "name": "filter_antique",
+      "value": "Antique"
+    },
+    {
+      "name": "filter_lucky",
+      "value": "Lucky"
+    },
+    {
+      "name": "filter_sweet",
+      "value": "Sweet"
+    },
+    {
+      "name": "filter_medium",
+      "value": "Medium"
+    },
+    {
+      "name": "filter_milk_tea",
+      "value": "Milk Tea"
+    },
+    {
+      "name": "compare_button",
+      "value": "Compare"
+    },
+    {
+      "name": "small_screen_alert_message",
+      "value": "This page is not optimized for small screens. Please use a larger screen for better experience."
+    },
+    {
+      "name": "small_screen_alert_confirm",
+      "value": "OK"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "ability_desc",
+      "value": "description"
+    },
+    {
+      "name": "ability_label",
+      "value": "Picture Beautification"
+    },
+    {
+      "name": "tab_photos",
+      "value": "Photos"
+    },
+    {
+      "name": "tab_albums",
+      "value": "Albums"
+    },
+    {
+      "name": "tab_moments",
+      "value": "Moments"
+    },
+    {
+      "name": "tab_cut",
+      "value": "Cut"
+    },
+    {
+      "name": "tab_crop",
+      "value": "Crop"
+    },
+    {
+      "name": "tab_adjust",
+      "value": "Adjust"
+    },
+    {
+      "name": "tab_filters",
+      "value": "Filters"
+    }
+  ]
+}

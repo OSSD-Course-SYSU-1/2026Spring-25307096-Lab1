@@ -1,0 +1,44 @@
+{
+  "color": [
+    {
+      "name": "editing_page_background",
+      "value": "#1F1F1F"
+    },
+    {
+      "name": "filter_name_color",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "filter_border_color",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "title_icon_color_primary",
+      "value": "#dbffffff"
+    },
+    {
+      "name": "title_icon_color_secondary",
+      "value": "#66ffffff"
+    },
+    {
+      "name": "title_button_background",
+      "value": "#1affffff"
+    },
+    {
+      "name": "compare_button_text",
+      "value": "#DBFFFFFF"
+    },
+    {
+      "name": "compare_button_background",
+      "value": "#4D4D4D"
+    },
+    {
+      "name": "slider_selected_color",
+      "value": "#E5E5E5"
+    },
+    {
+      "name": "slider_track_color",
+      "value": "#33ffffff"
+    }
+  ]
+}

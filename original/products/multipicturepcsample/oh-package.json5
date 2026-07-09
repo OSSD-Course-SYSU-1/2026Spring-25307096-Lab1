@@ -1,0 +1,13 @@
+{
+  "name": "multipicturepcsample",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "",
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "multipicturecommon": "file:../../multipicturecommon",
+    "multipicturebrowsing": "file:../../features/multipicturebrowsing",
+    "multipictureediting": "file:../../features/multipictureediting"
+  }
+}

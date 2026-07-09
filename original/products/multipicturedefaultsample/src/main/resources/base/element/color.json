@@ -1,0 +1,20 @@
+{
+  "color": [
+    {
+      "name": "start_window_background",
+      "value": "#F1F3F5"
+    },
+    {
+      "name": "tab_unselected_color",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "title_bar_background",
+      "value": "#F1F3F5"
+    },
+    {
+      "name": "tab_bar_unselected_color",
+      "value": "#99000000"
+    }
+  ]
+}

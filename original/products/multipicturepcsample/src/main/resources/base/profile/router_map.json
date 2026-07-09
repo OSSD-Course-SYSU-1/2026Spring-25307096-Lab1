@@ -1,0 +1,20 @@
+{
+  "routerMap": [
+    {
+      "name": "PictureBrowsing",
+      "pageSourceFile": "src/main/ets/pages/Index.ets",
+      "buildFunction": "PictureBrowsingBuilder",
+      "data": {
+        "description" : "This is PictureBrowsing Page."
+      }
+    },
+    {
+      "name": "PictureEditing",
+      "pageSourceFile": "src/main/ets/pages/Index.ets",
+      "buildFunction": "PictureEditingBuilder",
+      "data": {
+        "description" : "This is PictureEditing Page."
+      }
+    }
+  ]
+}

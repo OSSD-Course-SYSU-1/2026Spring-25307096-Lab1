@@ -1,0 +1,12 @@
+{
+  "color": [
+    {
+      "name": "start_window_background",
+      "value": "#1F1F1F"
+    },
+    {
+      "name": "tab_unselected_color",
+      "value": "#FFFFFF"
+    }
+  ]
+}
