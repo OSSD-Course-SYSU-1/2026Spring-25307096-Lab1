@@ -1,94 +1,153 @@
-# 多设备图片美化界面
+# MultiPictureBeautification（多设备图片美化）
 
-## 项目简介
+基于 HarmonyOS ArkUI 开发的多设备图片美化应用，实现**一次开发、多端部署**。支持直板机、折叠屏、平板等多种设备形态，提供图片浏览、编辑、美化等完整功能。
 
-基于自适应和响应式布局，实现一次开发，多端部署-图片美化。
+## 📱 效果预览
 
-## 效果预览
+### 设备适配
 
-本篇Codelab基于自适应布局和响应式布局，实现一次开发，多端部署的即时通讯页面。通过“三层工程架构”实现代码复用，并根据直板机、装折叠、平板不同的设备尺寸设计对应页面。
-直板机效果如图所示：
+| 直板机 | 折叠屏 | 平板 |
+|---|---|---|
+| <img src='screenshots/device/phone.png' width=240> | <img src='screenshots/device/foldable.png' width=360> | <img src='screenshots/device/pad.png' width=480> |
 
-<img src='screenshots/device/phone.png' width=320>
+### 功能演示视频
 
-双折叠展开态效果如图所示：
+| 日期 | 内容 | 链接 |
+|---|---|---|
+| 2026-05-12 | 基础功能演示 | [📹 观看](screenshots/demo/PixPin_2026-05-12_16-51-18.mp4) |
+| 2026-05-26 | 新增功能展示 | [📹 观看](screenshots/demo/PixPin_2026-05-26_12-51-09.mp4) |
+| 2026-06-23 | 水印 & 马赛克工具 | [📹 观看](screenshots/demo/PixPin_2026-06-23_17-15-49.mp4) |
+| 2026-07-09 | 最新功能展示 | [📹 观看](screenshots/demo/PixPin_2026-07-09_21-12-59.mp4) |
 
-<img src='screenshots/device/foldable.png' width=480>
+## 🎯 功能特性
 
-平板效果如图所示：
+### 图片浏览
+- ✅ **自适应相册** — 响应式网格布局，适配不同屏幕尺寸
+- ✅ **大图预览** — 支持双指缩放（Pinch Gesture）
+- ✅ **缩略图列表** — 底部滑动缩略图，快速定位
+- ✅ **左右滑动切换** — 手势互斥组合（缩放 × 滑动 × 双击），互不冲突
+- ✅ **图片旋转** — 双击 90° 循环旋转（0° → 90° → 180° → 270° → 0°）
 
-<img src='screenshots/device/pad.png' width=800>
+### 图片编辑
+- ✅ **AI 智能美化** — 8 种预设滤镜（自然、美食、风景、人像、夜景、复古、黑白、鲜艳），强度滑块调节，长按预览原始效果
+- ✅ **文字水印** — 自定义文字、颜色、透明度、旋转角度、字体大小
+- ✅ **马赛克工具** — 画笔涂抹式打码，可调节画笔大小和模糊强度
+- ✅ **贴纸/表情** — 内置 emoji 贴纸面板，拖拽添加到图片
 
-## 工程目录
+### 交互体验
+- ✅ **收藏功能** — 红心图标标记，`preferences` API 持久化存储，应用重启不丢失
+- ✅ **删除功能** — 从列表移除图片，自动重建收藏索引
+- ✅ **图片信息弹窗** — 文件名、尺寸、日期等元数据，全屏模态弹窗
+- ✅ **国际化** — 中英文双语支持，base 资源完整覆盖
+- ✅ **深色模式** — 跟随系统主题自动切换
+
+### 多设备适配
+- ✅ **Breakpoint 断点系统** — sm (< 600vp) / md (< 840vp) / lg (≥ 840vp)
+- ✅ **折叠屏适配** — 监听 `display.on('change')` 实时切换布局
+- ✅ **三层工程架构** — commons（公共层）+ features（特性层）+ product（产品层）
+
+## 🏗️ 工程目录
+
 ```
-├──commons                                      // 公共能力层
-│  ├──base/src/main/ets                         // 基础能力
-│  │  ├──constants                              // 常量类
-│  │  └──utils                                  // 常量类
-│  ├──base/src/main/resources                   // 资源文件目录
-│  └──base/Index.ets                            // 对外接口类
-├──features                                     // 基础特性层
-│  ├──albumView/src/main/ets                    // 相册
-│  │  ├──constants
-│  │  │  └──AlbumViewConstants.ets              // 常量类
-│  │  └──view
-│  │      ├──AlbumView.ets                      // 相册
-│  │      └──SideColumn.ets                     // 侧边栏
-│  ├──albumView/src/main/resources              // 资源文件目录
-│  ├──albumView/Index.ets                       // 对外接口类
-│  ├──pictureEdit/src/main/ets                  // 图片编辑
-│  │  ├──constants
-│  │  │  └──PictureEditConstants.ets            // 常量类
-│  │  ├──viewmodel
-│  │  │  └──AdaptiveViewModel.ets               // 自适应类
-│  │  └──views
-│  │      └──PictureEdit.ets                    // 图片编辑
-│  ├──pictureEdit/src/main/resources            // 资源文件目录
-│  ├──pictureEdit/Index.ets                     // 对外接口类
-│  ├──pictureView/src/main/ets                  // 大图预览
-│  │  ├──constants
-│  │  │  └──PictureViewConstants.ets            // 常量类
-│  │  ├──pages
-│  │  │  └──PictureViewIndex.ets                // 大图预览页
-│  │  ├──view
-│  │  │  ├──BottomBar.ets                       // 底部栏区域
-│  │  │  ├──CenterPart.ets                      // 中心大图
-│  │  │  ├──PreviewLists.ets                    // 下册滑动图片缩略图
-│  │  │  └──TopBar.ets                          // 顶部栏区域
-│  │  └──viewmodel
-│  │     └──AdaptiveViewModel.ets               // 自适应类
-│  ├──pictureView/src/main/resources            // 资源文件目录
-│  └──pictureView/Index.ets                     // 对外接口类
-└──products                                     // 产品定制层
-   ├──phone/src/main/ets                       
-   │  ├──pages
-   │  │  └──Index.ets                          // 程序入口类
-   │  └──phoneability
-   │     └──PhoneAbility.ets                   // 主界面
-   └──phone/src/main/resources                 // 资源文件目录
+MultiPictureBeautification/
+├── AppScope/                                    # 全局应用配置
+│   ├── app.json5                                # bundleName、版本号、图标
+│   └── resources/                               # 全局资源
+├── commons/                                     # 公共能力层
+│   └── base/src/main/ets/
+│       ├── constants/                           # 通用常量
+│       └── utils/                               # 工具类
+├── features/                                    # 基础特性层
+│   ├── albumView/                               # 相册浏览模块
+│   │   └── src/main/ets/
+│   │       ├── constants/AlbumViewConstants.ets
+│   │       └── view/
+│   │           ├── AlbumView.ets                # 相册主视图
+│   │           └── SideColumn.ets               # 侧边栏（平板/折叠屏）
+│   ├── pictureView/                             # 大图预览模块
+│   │   └── src/main/ets/
+│   │       ├── pages/PictureViewIndex.ets       # 大图预览主页
+│   │       ├── view/
+│   │       │   ├── TopBar.ets                   # 顶部栏（返回/收藏/详情/删除）
+│   │       │   ├── CenterPart.ets               # 中心大图（缩放/旋转/滑动）
+│   │       │   ├── BottomBar.ets                # 底部栏（编辑/收藏/分享）
+│   │       │   └── PreviewLists.ets             # 缩略图列表
+│   │       ├── viewmodel/AdaptiveViewModel.ets  # 自适应视图模型
+│   │       ├── utils/FavoritesStore.ets         # 收藏持久化
+│   │       └── constants/PictureViewConstants.ets
+│   └── pictureEdit/                             # 图片编辑模块
+│       └── src/main/ets/
+│           ├── views/PictureEdit.ets            # 编辑主视图
+│           ├── viewmodel/AdaptiveViewModel.ets
+│           └── constants/PictureEditConstants.ets
+├── product/phone/                               # 产品定制层（手机）
+│   └── src/main/ets/
+│       ├── pages/Index.ets                      # 应用入口页
+│       └── phoneability/PhoneAbility.ets        # UIAbility
+├── screenshots/                                 # 截图 & 演示视频
+│   ├── device/                                  # 设备截图
+│   └── demo/                                    # 功能演示视频
+├── docs/                                        # 文档 & 设计规格
+├── build-profile.json5                          # 构建配置
+├── hvigorfile.ts                                # Hvigor 构建入口
+└── oh-package.json5                             # ohpm 依赖配置
 ```
 
-## 相关概念
+## 🔧 技术栈
 
-- 一次开发，多端部署：一套代码工程，一次开发上架，多端按需部署。支撑开发者快速高效的开发支持多种终端设备形态的应用，实现对不同设备兼容的同时，提供跨设备的流转、迁移和协同的分布式体验。
-- 组件区域变化事件：组件区域变化事件指组件显示的尺寸、位置等发生变化时触发的事件。
-- 双指缩放：用于触发捏合手势，触发捏合手势的最少手指为2指，最大为5指，最小识别距离为5vp。
+| 类别 | 技术 |
+|---|---|
+| 平台 | HarmonyOS 6.1 (API 23) |
+| 语言 | ArkTS |
+| UI 框架 | ArkUI（声明式） |
+| 构建工具 | Hvigor 6.x |
+| IDE | DevEco Studio 6.1+ |
+| 架构模式 | Stage 模型 + 三层工程架构 |
+| 状态管理 | `@State` / `@Link` / `@Provide` + `@Consume` / `AppStorage` + `@Watch` |
+| 数据持久化 | `preferences` API |
+| 手势系统 | `GestureGroup`（互斥模式）/ `PinchGesture` / `PanGesture` / `TapGesture` |
 
-## 具体实现
-基于一次开发多端部署、组件区域变化事件及双指缩放能力，本图片美化案例实现了一套代码多端部署运行，通过监听组件区域变化适配不同设备界面，支持用户双指缩放对图片进行自由调整，并可跨设备实现美化效果的流转、迁移与协同操作。
+## 🚀 快速开始
 
-## 相关权限
+### 环境要求
 
-不涉及。
+| 工具 | 版本 |
+|---|---|
+| HarmonyOS | 5.0.5 Release 及以上 |
+| DevEco Studio | 6.0.2 Release 及以上 |
+| HarmonyOS SDK | 6.0.2 Release SDK 及以上 |
+| 支持设备 | 直板机、折叠屏（Mate X 系列）、平板 |
 
-## 使用说明
+### 构建运行
 
-- 分别在直板机、双折叠、平板安装并打开应用，不同设备的应用页面通过响应式布局和自适应布局呈现不同的效果。
-- 点击编辑、相册图标将分别进入图片编辑页面，相册页面。
+```bash
+# 1. 克隆仓库
+git clone https://github.com/xieryongmiao/2026Spring-25307096-Lab1.git
+cd 2026Spring-25307096-Lab1
 
-## 约束与限制
+# 2. 用 DevEco Studio 打开项目
+# File → Open → 选择项目根目录
 
-1. 本示例仅支持标准系统上运行，支持设备：直板机、双折叠（Mate X系列）、平板。
-2. HarmonyOS系统：HarmonyOS 5.0.5 Release及以上。
-3. DevEco Studio版本：DevEco Studio 6.0.2 Release及以上。
-4. HarmonyOS SDK版本：HarmonyOS 6.0.2 Release SDK及以上。
+# 3. 连接设备/启动模拟器，点击运行
+```
+
+## 📋 技术亮点
+
+1. **手势互斥组合** — 使用 `GestureGroup(GestureMode.Exclusive)` 将缩放、滑动、双击三种手势组合，避免冲突
+2. **AppStorage 事件通信** — 用 `AppStorage.setOrCreate()` + `@StorageLink` + `@Watch` 替代不可靠的 `@Provide/@Consume` 类实例传递
+3. **全屏模态弹窗** — 弹窗置于页面最外层 Stack，`hitTestBehavior(HitTestMode.Block)` 防穿透
+4. **Breakpoint 响应式** — 监听 `display.on('change')` 实时切换单栏/双栏布局
+5. **三层工程架构** — commons / features / product 分层复用，一套代码多端部署
+6. **数据持久化** — `preferences` API 实现收藏状态跨会话保持
+7. **国际化** — 中英文双语，base 资源完整覆盖，新增功能即含翻译
+8. **AI 编辑** — 8 种预设滤镜 + 强度调节 + 长按预览原图
+
+## 📄 相关文档
+
+- [新增功能说明 (v2)](NEW_FEATURES.md)
+- [项目文件描述](PROJECT_FILES_DESCRIPTION.md)
+- [设计规格 & 实现计划](docs/)
+
+## 📝 许可证
+
+本项目基于 Apache 2.0 协议开源，详见 [LICENSE](LICENSE)。
